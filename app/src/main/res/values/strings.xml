@@ -3,4 +3,22 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="no_tienes_una_cuenta_picha_aqui_y_n_registrate">¿No tienes cuenta? ¡Haz clic aquí para registrarte!</string>
+    <string name="bienvenido_a_planpal">Bienvenido a PlanPal</string>
+    <string name="introduce_tu_contrase_a">Introduce tu contraseña.</string>
+    <string name="introduce_tu_correo">Introduce tu correo.</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="ya_tienes_cuenta_haz_clic_aqu_para_iniciar_sesi_n">Ya tienes cuenta? ¡Haz clic aquí para Iniciar Sesión!</string>
+    <string name="crea_tu_cuenta_en_planpal">Crea tu cuenta en PlanPal</string>
+    <string name="descripci_n">Escribe sobre ti oh sobre tu empresa \n(Web oficial, información de interes etc…)</string>
+    <string name="campo_de_informaci_n_adicional_opcional">Campo de Información Adicional (Opcional).</string>
 </resources>
