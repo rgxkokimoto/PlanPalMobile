@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1098068681851",
+    "project_id": "proyectofinalciclo-a1049",
+    "storage_bucket": "proyectofinalciclo-a1049.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098068681851:android:7ad680cea9e2e375b82ede",
+        "android_client_info": {
+          "package_name": "com.example.planpalmobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlzPn61VZQm1mJmh67nFGzg6PEfMdLdcA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
