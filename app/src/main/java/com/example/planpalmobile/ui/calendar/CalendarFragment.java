@@ -10,12 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.planpalmobile.databinding.FragmentCalendarBinding;
+import com.applandeo.materialcalendarview.CalendarView;
 import com.example.planpalmobile.databinding.FragmentCalendarBinding;
 
 public class CalendarFragment extends Fragment {
 
     private FragmentCalendarBinding binding;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -25,8 +26,17 @@ public class CalendarFragment extends Fragment {
         binding = FragmentCalendarBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textHome;
+        calendarViewModel.getCalendarDays().observe(getViewLifecycleOwner(), calendarDays -> {
+            CalendarView calendarView = binding.calendarView;
+            calendarView.setCalendarDays(calendarDays);
+        });
+
+        /*final TextView textView = binding.textHome;
         calendarViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        */
+
+
+
         return root;
     }
 
