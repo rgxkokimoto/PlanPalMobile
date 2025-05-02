@@ -22,16 +22,17 @@ public class CalendarViewModel extends ViewModel {
     public CalendarViewModel () {
         // Pruebas con el calendario
         List<CalendarDay> listaEventos = new ArrayList<>();
-        Calendar calendario = Calendar.getInstance();
-        calendario.set(2025,Calendar.MAY, 3);
-        CalendarDay dia3 = new CalendarDay(calendario);
+
+        Calendar fecha = Calendar.getInstance();
+        fecha.set(2025,Calendar.MAY, 3);
+        CalendarDay dia3 = new CalendarDay(fecha);
         dia3.setImageResource(R.drawable.baseline_event_24);
         dia3.setLabelColor(R.color.bar_color);
+
         listaEventos.add(dia3);
         diasCalendario.setValue(listaEventos);
 
     }
-
 
     public LiveData<List<CalendarDay>> getDiasCalendario() {
         return diasCalendario;

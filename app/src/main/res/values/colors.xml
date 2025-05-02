@@ -11,5 +11,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray_list">#A9A7A5A4</color>
-    <color name="blank_background">#FCFDFF</color>
+    <color name="blank_background">#FBF7F7</color>
+    <color name="bar_colorTest" />
+    <color name="bar_colorTest2">#5CC230</color>
 </resources>
