@@ -1,5 +1,7 @@
 package com.example.planpalmobile.data.entities;
 
+import org.threeten.bp.LocalDateTime;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -7,8 +9,6 @@ import java.util.Map;
 public class Evento {
 
     private String codigo;
-    // private String name; Oh el name es el código?
-    // private String Estado; Host, Participant, Leave
     private String descripcion;
     private Date horaInicio;
     private Date horaFin;
@@ -17,6 +17,13 @@ public class Evento {
     private String creadorId;
 
     public Evento() {}
+
+    // Para el item de la lista del Calendario
+    public Evento(String codigo, String descripcion, Date horaInicio) {
+        this.codigo = codigo;
+        this.descripcion = descripcion;
+        this.horaInicio = horaInicio;
+    }
 
     public String getCodigo() {
         return codigo;

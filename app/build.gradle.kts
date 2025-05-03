@@ -46,13 +46,17 @@ dependencies {
     implementation(libs.navigation.ui)
     implementation(libs.annotation)
     implementation(libs.activity)
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.firestore)
     implementation(libs.credentials)
     implementation(libs.credentials.play.services.auth)
     implementation(libs.googleid)
+    // Libreria para el calendario
     implementation("com.applandeo:material-calendar-view:1.9.2")
+    // Para gestionar fechas
+    implementation("com.jakewharton.threetenabp:threetenabp:1.4.4") // (Temporal hasta API)
     implementation(libs.firebase.database)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
