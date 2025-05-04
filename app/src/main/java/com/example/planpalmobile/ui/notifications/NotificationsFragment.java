@@ -1,15 +1,19 @@
 package com.example.planpalmobile.ui.notifications;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.planpalmobile.LoginActivity;
 import com.example.planpalmobile.R;
 import com.example.planpalmobile.databinding.FragmentNotificationsBinding;
 
@@ -30,10 +34,10 @@ public class NotificationsFragment extends Fragment {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        // Referencias a los nuevos TextViews
         TextView correoTextView = root.findViewById(R.id.correoTextView);
         TextView descripcionTextView = root.findViewById(R.id.descripcionTextView);
         TextView nombreUsuarioTextView = root.findViewById(R.id.nombreUsuarioTextView);
+        Button btnCerrarSesion = root.findViewById(R.id.btnCerrarSesion); // <-- Botón
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -54,7 +58,7 @@ public class NotificationsFragment extends Fragment {
 
                             correoTextView.setText("Correo: " + correo);
                             descripcionTextView.setText("Descripción: " + descripcion);
-                            nombreUsuarioTextView.setText("Nombre de usuario: " + nombreUsuario);
+                            nombreUsuarioTextView.setText(nombreUsuario);
                         } else {
                             correoTextView.setText("No se encontraron datos.");
                             descripcionTextView.setText("");
@@ -66,11 +70,26 @@ public class NotificationsFragment extends Fragment {
                         Log.e("NotificationsFragment", "Error al obtener datos de Firestore", e);
                     });
 
-
         } else {
             correoTextView.setText("Usuario no autenticado.");
             descripcionTextView.setText("");
         }
+
+        // ---------- Acción del botón Cerrar sesión ----------
+        btnCerrarSesion.setOnClickListener(v -> {
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Cerrar sesión")
+                    .setMessage("¿Estás seguro de que deseas cerrar sesión?")
+                    .setPositiveButton("Sí", (dialog, which) -> {
+                        FirebaseAuth.getInstance().signOut();
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        getActivity().finish();
+                    })
+                    .setNegativeButton("Cancelar", null)
+                    .show();
+        });
 
         return root;
     }
