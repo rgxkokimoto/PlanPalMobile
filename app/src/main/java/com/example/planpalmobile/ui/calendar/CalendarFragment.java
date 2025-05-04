@@ -42,11 +42,8 @@ public class CalendarFragment extends Fragment {
             public void onChanged(List<CalendarDay> eventos) {
 
                 // TODO RESOLVER PROBLEMA DEL DELAY AL CAMBIAR EL DIA
-                if (!eventos.equals(listaAnterior)) {
-                    Log.d("CalendarDebug", "Días actualizados: " + eventos.size());
-                    binding.calendarView.setCalendarDays(eventos);
-                    listaAnterior = eventos;
-                }
+                binding.calendarView.setCalendarDays(eventos);
+                listaAnterior = eventos;
             }
         });
 

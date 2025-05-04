@@ -37,7 +37,7 @@ public class CalendarViewModel extends ViewModel {
     }
 
     /**
-     * Con esto vamos a cargar los eventos desde el fragment
+     * Con esto vamos a cargar los eventos de la Recyclerview desde CalendarFragment.java
      */
     public void loadEventos() {
         repository.getEventItems(eventosList::postValue);
