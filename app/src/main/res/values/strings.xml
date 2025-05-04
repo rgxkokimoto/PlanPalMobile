@@ -2,7 +2,7 @@
     <string name="app_name">PlanPalMobile</string>
     <string name="title_calendar">Calendar</string>
     <string name="title_todoLeft">TodoL</string>
-    <string name="title_todoRight">TodoR</string>
+    <string name="title_todoRight">Perfil</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
