@@ -8,13 +8,18 @@ import java.util.Date;
  */
 public class EventoDTOItem {
     public String codigo;
-    public String descripcion;
     public Date horaInicio;
 
-    public EventoDTOItem(String codigo, String descripcion, Date horaInicio) {
+    public EventoDTOItem(String codigo, Date horaInicio) {
         this.codigo = codigo;
-        this.descripcion = descripcion;
         this.horaInicio = horaInicio;
     }
 
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public Date getHoraInicio() {
+        return horaInicio;
+    }
 }

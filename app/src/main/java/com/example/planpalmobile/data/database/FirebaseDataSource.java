@@ -39,7 +39,6 @@ public class FirebaseDataSource {
                     for (QueryDocumentSnapshot doc : snapshot) {
                         Map<String, Object> data = new HashMap<>();
                         data.put("codigo", doc.getString("codigo"));
-                        data.put("descripcion", doc.getString("descripcion"));
                         data.put("horaInicio", doc.getString("horaInicio"));
                         resultado.add(data);
                     }

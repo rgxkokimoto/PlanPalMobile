@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.applandeo.materialcalendarview.CalendarDay;
 import com.example.planpalmobile.R;
+import com.example.planpalmobile.data.dto.EventoDTOItem;
+import com.example.planpalmobile.data.repository.EventosRepository;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,9 +17,9 @@ public class CalendarViewModel extends ViewModel {
 
     private final MutableLiveData<List<CalendarDay>> diasCalendario = new MutableLiveData<>();
     private final MutableLiveData<CalendarDay> diaSelecionado = new MutableLiveData<>();
-    private MutableLiveData<String> tvdiaSelected = new MutableLiveData<>();
-
-
+    private final MutableLiveData<String> tvdiaSelected = new MutableLiveData<>();
+    private final MutableLiveData<List<EventoDTOItem>> eventosList = new MutableLiveData<>();
+    private final EventosRepository repository = new EventosRepository();
 
     public CalendarViewModel () {
         // Pruebas con el calendario
@@ -34,9 +36,18 @@ public class CalendarViewModel extends ViewModel {
 
     }
 
+    /**
+     * Con esto vamos a cargar los eventos desde el fragment
+     */
+    public void loadEventos() {
+        repository.getEventItems(eventosList::postValue);
+    }
+
     public LiveData<List<CalendarDay>> getDiasCalendario() {
         return diasCalendario;
     }
+
+    public LiveData<List<EventoDTOItem>> getEventos() {return  eventosList;}
 
     public LiveData<CalendarDay> getDiaSelecionado() {
         return diaSelecionado;
