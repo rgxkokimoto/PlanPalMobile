@@ -26,7 +26,7 @@ public class CalendarViewModel extends ViewModel {
         List<CalendarDay> listaEventos = new ArrayList<>();
 
         Calendar fecha = Calendar.getInstance();
-        fecha.set(2025,Calendar.APRIL, 5);
+        fecha.set(2025,Calendar.MAY, 5);
         CalendarDay dia3 = new CalendarDay(fecha);
         dia3.setImageResource(R.drawable.baseline_event_24);
         dia3.setLabelColor(R.color.bar_color);
