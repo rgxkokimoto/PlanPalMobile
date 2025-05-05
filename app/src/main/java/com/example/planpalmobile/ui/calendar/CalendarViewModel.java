@@ -14,7 +14,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class CalendarViewModel extends ViewModel {
-
+    // Salida a produción sprint2
     private final MutableLiveData<List<CalendarDay>> diasCalendario = new MutableLiveData<>();
     private final MutableLiveData<CalendarDay> diaSelecionado = new MutableLiveData<>();
     private final MutableLiveData<String> tvdiaSelected = new MutableLiveData<>();
@@ -26,7 +26,7 @@ public class CalendarViewModel extends ViewModel {
         List<CalendarDay> listaEventos = new ArrayList<>();
 
         Calendar fecha = Calendar.getInstance();
-        fecha.set(2025,Calendar.MAY, 3);
+        fecha.set(2025,Calendar.APRIL, 5);
         CalendarDay dia3 = new CalendarDay(fecha);
         dia3.setImageResource(R.drawable.baseline_event_24);
         dia3.setLabelColor(R.color.bar_color);
