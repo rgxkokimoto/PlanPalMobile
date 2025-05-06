@@ -1,4 +1,4 @@
-package com.example.planpalmobile.ui.notifications;
+package com.example.planpalmobile.ui.perfil;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -11,27 +11,27 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.planpalmobile.LoginActivity;
 import com.example.planpalmobile.R;
-import com.example.planpalmobile.databinding.FragmentNotificationsBinding;
-
+import com.example.planpalmobile.databinding.FragmentPerfilBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
 import android.util.Log;
 
+import java.util.Objects;
 
-public class NotificationsFragment extends Fragment {
 
-    private FragmentNotificationsBinding binding;
+public class PerfilFragment extends Fragment {
+
+    private FragmentPerfilBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+        binding = FragmentPerfilBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         TextView correoTextView = root.findViewById(R.id.correoTextView);
@@ -56,8 +56,8 @@ public class NotificationsFragment extends Fragment {
                             String descripcion = document.getString("opcInfo");
                             String nombreUsuario = document.getString("id");
 
-                            correoTextView.setText("Correo: " + correo);
-                            descripcionTextView.setText("Descripción: " + descripcion);
+                            correoTextView.setText(getString(R.string.correo_alert) + correo);
+                            descripcionTextView.setText(getString(R.string.descripci_n_alert) + descripcion);
                             nombreUsuarioTextView.setText(nombreUsuario);
                         } else {
                             correoTextView.setText("No se encontraron datos.");
@@ -65,13 +65,13 @@ public class NotificationsFragment extends Fragment {
                         }
                     })
                     .addOnFailureListener(e -> {
-                        correoTextView.setText("Error al cargar datos.");
+                        correoTextView.setText(R.string.error_al_cargar_datos);
                         descripcionTextView.setText("");
                         Log.e("NotificationsFragment", "Error al obtener datos de Firestore", e);
                     });
 
         } else {
-            correoTextView.setText("Usuario no autenticado.");
+            correoTextView.setText(R.string.usuario_no_autenticado);
             descripcionTextView.setText("");
         }
 
@@ -85,7 +85,7 @@ public class NotificationsFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        getActivity().finish();
+                        requireActivity().finish();
                     })
                     .setNegativeButton("Cancelar", null)
                     .show();

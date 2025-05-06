@@ -4,8 +4,8 @@
 
 
     <item
-        android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:id="@+id/navigation_event_manager"
+        android:icon="@drawable/baseline_mode_edit_24"
         android:title="@string/title_todoLeft" />
 
     <item
@@ -14,7 +14,7 @@
         android:title="@string/title_calendar"/>
 
     <item
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_perfil"
         android:icon="@drawable/baseline_person_24"
         android:title="@string/title_todoRight" />
 

@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_calendar" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.planpalmobile.ui.dashboard.DashboardFragment"
+        android:id="@+id/navigation_event_manager"
+        android:name="com.example.planpalmobile.ui.eventmanager.EventManagerFragment"
         android:label="@string/title_todoLeft"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_event_manager" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.planpalmobile.ui.notifications.NotificationsFragment"
+        android:id="@+id/navigation_perfil"
+        android:name="com.example.planpalmobile.ui.perfil.PerfilFragment"
         android:label="@string/title_todoRight"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_perfil" />
 </navigation>
