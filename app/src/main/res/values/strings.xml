@@ -37,4 +37,6 @@
     <string name="usuario_no_autenticado">Usuario no autenticado.</string>
     <string name="correo_alert">"Correo: "</string>
     <string name="descripci_n_alert">"Descripción: "</string>
+    <string name="crea_un_nuevo_componente">Crea un nuevo componente</string>
+    <string name="create_new_event">create new event</string>
 </resources>
