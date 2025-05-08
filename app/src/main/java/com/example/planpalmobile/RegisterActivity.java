@@ -2,7 +2,6 @@ package com.example.planpalmobile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.planpalmobile.databinding.ActivityRegisterBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -26,7 +24,6 @@ public class RegisterActivity extends AppCompatActivity {
     private ActivityRegisterBinding binding;
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
         binding.btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String username = Objects.requireNonNull(binding.etLoginEmail.getText()).toString().trim();
                 String password = Objects.requireNonNull(binding.etLoginPassword.getText()).toString().trim();
                 String opcInfo = Objects.requireNonNull(binding.etDescriptInfo.getText()).toString();
@@ -79,11 +77,17 @@ public class RegisterActivity extends AppCompatActivity {
 
                             });
 
-
                 }
 
             }
 
+        });
+
+        binding.tvToLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            }
         });
 
     }
@@ -108,7 +112,6 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnFailureListener(save -> {
                     Toast.makeText(RegisterActivity.this, "Hubo un error al guardar al usuario", Toast.LENGTH_SHORT).show();
                 });
-
-
     }
+
 }
