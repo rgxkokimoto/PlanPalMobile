@@ -20,7 +20,7 @@ public class EventManagerFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        EventManagerViewModel dashboardViewModel =
+        EventManagerViewModel eventManagerViewModel =
                 new ViewModelProvider(this).get(EventManagerViewModel.class);
 
         binding = FragmentEventManagerBinding.inflate(inflater, container, false);
@@ -31,7 +31,7 @@ public class EventManagerFragment extends Fragment {
         });
 
         final TextView textView = binding.textDashboard;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        eventManagerViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

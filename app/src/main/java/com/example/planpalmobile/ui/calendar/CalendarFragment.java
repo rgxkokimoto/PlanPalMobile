@@ -20,7 +20,6 @@ import com.example.planpalmobile.databinding.FragmentCalendarBinding;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 public class CalendarFragment extends Fragment {
@@ -40,7 +39,6 @@ public class CalendarFragment extends Fragment {
         calendarViewModel.getDiasCalendario().observe(getViewLifecycleOwner(), new Observer<List<CalendarDay>>() {
             @Override
             public void onChanged(List<CalendarDay> eventos) {
-
                 // TODO RESOLVER PROBLEMA DEL DELAY AL CAMBIAR EL DIA
                 binding.calendarView.setCalendarDays(eventos);
                 listaAnterior = eventos;
@@ -70,6 +68,7 @@ public class CalendarFragment extends Fragment {
         adapter = new ItemEventRecyclerAdapter(new ArrayList<>());
         rv.setAdapter(adapter);
 
+        // TODO esto se puede refacortrizar?
         CalendarViewModel viewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
         viewModel.getEventos().observe(getViewLifecycleOwner(), lista -> {
             adapter.updateList(lista);

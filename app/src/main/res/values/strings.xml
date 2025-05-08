@@ -49,4 +49,6 @@
     <string name="_99_99">99:99</string>
     <string name="descripcion">Descripcion</string>
     <string name="nueva_cita">Nueva cita</string>
+    <string name="_20_03_2025">20/03/2025</string>
+    <string name="_15_50">15:50</string>
 </resources>

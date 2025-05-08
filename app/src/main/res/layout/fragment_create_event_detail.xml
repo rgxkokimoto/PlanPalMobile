@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -52,7 +52,7 @@
             android:id="@+id/tvInicio"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="30dp"
             android:layout_weight="1"
             android:padding="9dp"
             android:text="@string/inicio"
@@ -60,21 +60,22 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <com.google.android.material.button.MaterialButton
+        <EditText
             android:id="@+id/btnPickDay"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginEnd="15dp"
-            android:text="@string/_31_may"
+            android:hint="@string/_20_03_2025"
             android:textColor="@android:color/black"
             app:backgroundTint="@color/blank_background"
             app:cornerRadius="8dp" />
 
-        <com.google.android.material.button.MaterialButton
+        <EditText
             android:id="@+id/btnPickTime"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:text="@string/_99_99"
+            android:layout_marginEnd="15dp"
+            android:hint="@string/_15_50"
             android:textColor="@android:color/black"
             app:backgroundTint="@color/blank_background"
             app:cornerRadius="8dp" />
@@ -105,21 +106,22 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <com.google.android.material.button.MaterialButton
+        <EditText
             android:id="@+id/btnPickDayEn"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginEnd="15dp"
-            android:text="@string/_31_may"
+            android:hint="@string/_20_03_2025"
             android:textColor="@android:color/black"
             app:backgroundTint="@color/blank_background"
             app:cornerRadius="8dp" />
 
-        <com.google.android.material.button.MaterialButton
+        <EditText
             android:id="@+id/btnPickTimeEnd"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:text="@string/_99_99"
+            android:layout_marginEnd="15dp"
+            android:hint="@string/_15_50"
             android:textColor="@android:color/black"
             app:backgroundTint="@color/blank_background"
             app:cornerRadius="8dp" />
@@ -157,7 +159,7 @@
             android:padding="10dp">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/tvDiaSelect"
+                android:id="@+id/btnNewDate"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_marginStart="20dp"
