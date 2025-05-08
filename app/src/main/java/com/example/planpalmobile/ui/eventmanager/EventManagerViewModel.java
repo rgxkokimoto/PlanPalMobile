@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel;
  * ViewModel for {@link EventManagerFragment}.
  * Haber chavales este método se va a encargar tanto de la vista principal de este fragmento como de
  * la de crear y editar eventos.
- *
+
  * -Se encarga de la listas de fechas de fragmento FragmentEventManagerBinding
  *
  *
