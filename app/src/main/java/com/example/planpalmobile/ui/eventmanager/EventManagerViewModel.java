@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel;
  *
  * -Se encarga de la listas de fechas de fragmento FragmentEventManagerBinding
  *
- * -Se encarga del recycler view de FragmentCreateEventDetailBinding
+ *
  *
  */
 public class EventManagerViewModel extends ViewModel {
