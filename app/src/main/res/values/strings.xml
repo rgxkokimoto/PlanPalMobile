@@ -39,4 +39,14 @@
     <string name="descripci_n_alert">"Descripción: "</string>
     <string name="crea_un_nuevo_componente">Crea un nuevo componente</string>
     <string name="create_new_event">create new event</string>
+    <string name="inicio">Inicio</string>
+    <string name="titulo_del_evento">Titulo del evento</string>
+    <string name="fecha_del_evento">Fecha del evento</string>
+    <string name="fin">Fin</string>
+    <string name="cancelar">cancelar</string>
+    <string name="crear">crear</string>
+    <string name="_31_may">31 MAY</string>
+    <string name="_99_99">99:99</string>
+    <string name="descripcion">Descripcion</string>
+    <string name="nueva_cita">Nueva cita</string>
 </resources>

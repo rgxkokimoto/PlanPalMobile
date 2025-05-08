@@ -14,4 +14,5 @@
     <color name="blank_background">#FBF7F7</color>
     <color name="bar_colorTest" />
     <color name="bar_colorTest2">#5CC230</color>
+    <color name="sec_blue">#DF85AFFD</color>
 </resources>

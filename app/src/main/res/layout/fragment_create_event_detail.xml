@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.eventmanager.CreateEventDetailFragment"
+    android:padding="16dp"
+    android:background="@color/sec_blue"
+    >
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/titulo_del_evento"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_login_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@id/tvselectDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/fecha_del_evento"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout1" />
+
+    <LinearLayout
+        android:id="@+id/LlinicioSet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#5BFFFFFF"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvselectDate">
+
+        <TextView
+            android:id="@+id/tvInicio"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_weight="1"
+            android:padding="9dp"
+            android:text="@string/inicio"
+            android:textAlignment="textStart"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPickDay"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginEnd="15dp"
+            android:text="@string/_31_may"
+            android:textColor="@android:color/black"
+            app:backgroundTint="@color/blank_background"
+            app:cornerRadius="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPickTime"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="@string/_99_99"
+            android:textColor="@android:color/black"
+            app:backgroundTint="@color/blank_background"
+            app:cornerRadius="8dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LlfinSet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="#5BFFFFFF"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/LlinicioSet">
+
+        <TextView
+            android:id="@+id/tvFin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_weight="1"
+            android:padding="9dp"
+            android:text="@string/fin"
+            android:textAlignment="textStart"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPickDayEn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginEnd="15dp"
+            android:text="@string/_31_may"
+            android:textColor="@android:color/black"
+            app:backgroundTint="@color/blank_background"
+            app:cornerRadius="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPickTimeEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="@string/_99_99"
+            android:textColor="@android:color/black"
+            app:backgroundTint="@color/blank_background"
+            app:cornerRadius="8dp" />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/materialButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:backgroundTint="@color/blank_background"
+        android:text="@string/descripcion"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/LlfinSet" />
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:backgroundTint="#5BFFFFFF"
+        app:cardCornerRadius="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/lloptionsButtons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialButton">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/tvDiaSelect"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="20dp"
+                android:backgroundTint="@color/bar_colorTest2"
+                android:textColor="@color/white"
+                android:text="@string/nueva_cita"
+                android:textSize="11sp"
+                app:icon="@drawable/baseline_add_24"
+                app:iconGravity="textStart"
+                app:iconPadding="8dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvListEventItems"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="25dp"
+                android:layout_weight="1" />
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/lloptionsButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancelar"
+            android:layout_height="37dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="@string/cancelar"
+            android:layout_marginEnd="35dp"
+            android:textColor="@color/black"
+            app:backgroundTint="@color/blank_background"
+            app:cornerRadius="8dp"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCrear"
+            android:layout_height="37dp"
+            android:layout_width="0dp"
+            android:layout_marginStart="35dp"
+            android:layout_weight="1"
+            android:text="@string/crear"
+            android:textColor="@color/black"
+            app:backgroundTint="@color/blank_background"
+            app:cornerRadius="8dp"
+            />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
