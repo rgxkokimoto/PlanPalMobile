@@ -1,80 +1,68 @@
 package com.example.planpalmobile.ui.calendar;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.applandeo.materialcalendarview.CalendarDay;
-import com.applandeo.materialcalendarview.EventDay;
-import com.applandeo.materialcalendarview.listeners.OnDayClickListener;
 import com.example.planpalmobile.databinding.FragmentCalendarBinding;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class CalendarFragment extends Fragment {
 
     private FragmentCalendarBinding binding;
     private ItemEventRecyclerAdapter adapter;
-    private List<CalendarDay> listaAnterior = new ArrayList<>();
+    private CalendarViewModel calendarViewModel;
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        CalendarViewModel calendarViewModel =
-                new ViewModelProvider(this).get(CalendarViewModel.class);
 
         binding = FragmentCalendarBinding.inflate(inflater, container, false);
-        View view = binding.getRoot();
+        calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
 
-        calendarViewModel.getDiasCalendario().observe(getViewLifecycleOwner(), new Observer<List<CalendarDay>>() {
-            @Override
-            public void onChanged(List<CalendarDay> eventos) {
-                // TODO RESOLVER PROBLEMA DEL DELAY AL CAMBIAR EL DIA
-                binding.calendarView.setCalendarDays(eventos);
-                listaAnterior = eventos;
-            }
-        });
+        observeCalendarDays();
+        setupDayClickListener();
 
-        binding.calendarView.setOnDayClickListener(new OnDayClickListener() {
-            @Override
-            public void onDayClick(EventDay eventDay) {
-                Calendar clickedDayCalendar = eventDay.getCalendar();
-                int day = clickedDayCalendar.get(Calendar.DAY_OF_MONTH);
-
-                binding.tvDiaSelect.setText("día " + day);
-            }
-        });
-
-
-
-        return view;
+        return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(View v, Bundle b) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        setupRecyclerView();
+        observeEventos();
+        calendarViewModel.loadEventos();
+    }
 
-        RecyclerView rv = binding.rvListEventItems;
-        rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ItemEventRecyclerAdapter(new ArrayList<>());
-        rv.setAdapter(adapter);
-
-        // TODO esto se puede refacortrizar?
-        CalendarViewModel viewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
-        viewModel.getEventos().observe(getViewLifecycleOwner(), lista -> {
-            adapter.updateList(lista);
+    private void observeCalendarDays() {
+        calendarViewModel.getDiasCalendario().observe(getViewLifecycleOwner(), eventos -> {
+            binding.calendarView.setCalendarDays(eventos);
         });
+    }
 
-        viewModel.loadEventos();
+    private void observeEventos() {
+        calendarViewModel.getEventos().observe(getViewLifecycleOwner(), eventos -> {
+            adapter.updateList(eventos);
+        });
+    }
+
+    private void setupDayClickListener() {
+        binding.calendarView.setOnDayClickListener(eventDay -> {
+            int day = eventDay.getCalendar().get(Calendar.DAY_OF_MONTH);
+            binding.tvDiaSelect.setText("día " + day);
+        });
+    }
+
+    private void setupRecyclerView() {
+        adapter = new ItemEventRecyclerAdapter(new ArrayList<>());
+        binding.rvListEventItems.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.rvListEventItems.setAdapter(adapter);
     }
 
     @Override
