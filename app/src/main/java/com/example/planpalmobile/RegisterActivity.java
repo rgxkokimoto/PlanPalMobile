@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import com.example.planpalmobile.EmailSender;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -89,7 +90,6 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void guardarUsuarioEnDatabase(String username, String opcInfo) {
-
         String id = username.split("@")[0].replace(".", "");
 
         Map<String, Object> usuario = new HashMap<>();
@@ -102,13 +102,18 @@ public class RegisterActivity extends AppCompatActivity {
                 .set(usuario)
                 .addOnCompleteListener(save -> {
                     Toast.makeText(RegisterActivity.this, "Guardado completado!", Toast.LENGTH_SHORT).show();
+
+                    // Enviar correo de bienvenida
+                    String asunto = "¡Bienvenido a PlanPal!";
+                    String cuerpo = "Hola,\n\nGracias por registrarte en PlanPal. ¡Esperamos que disfrutes de nuestra aplicación para gestionar eventos!\n\nSaludos,\nEl equipo de PlanPal";
+
+                    new EmailSender(username, asunto, cuerpo).enviar();
                     startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                     finish();
                 })
                 .addOnFailureListener(save -> {
                     Toast.makeText(RegisterActivity.this, "Hubo un error al guardar al usuario", Toast.LENGTH_SHORT).show();
                 });
-
-
     }
+
 }
