@@ -15,4 +15,5 @@
     <color name="bar_colorTest" />
     <color name="bar_colorTest2">#5CC230</color>
     <color name="sec_blue">#DF85AFFD</color>
+    <color name="red_error_btn">#F8F86B5F</color>
 </resources>

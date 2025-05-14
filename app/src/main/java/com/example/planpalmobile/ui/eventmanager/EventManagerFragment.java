@@ -30,8 +30,6 @@ public class EventManagerFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.action_navigation_event_manager_to_createEventDetailFragment);
         });
 
-        final TextView textView = binding.textDashboard;
-        eventManagerViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
