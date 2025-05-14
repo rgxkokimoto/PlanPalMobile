@@ -37,6 +37,7 @@ public class ItemEventRecyclerAdapter
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         EventoDTOItem event = listaEventItem.get(position);
+
         holder.binding.tvNameEvent.setText(event.getCodigo());
 
         Date hiContext = event.getHoraInicio();

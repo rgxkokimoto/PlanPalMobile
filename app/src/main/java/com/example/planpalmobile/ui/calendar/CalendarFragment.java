@@ -36,7 +36,7 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         setupRecyclerView();
-        observeEventos();
+        setUpEventosInRV();
         calendarViewModel.loadEventos();
     }
 
@@ -46,8 +46,8 @@ public class CalendarFragment extends Fragment {
         });
     }
 
-    private void observeEventos() {
-        calendarViewModel.getEventos().observe(getViewLifecycleOwner(), eventos -> {
+    private void setUpEventosInRV() {
+        calendarViewModel.getEventosList().observe(getViewLifecycleOwner(), eventos -> {
             adapter.updateList(eventos);
         });
     }

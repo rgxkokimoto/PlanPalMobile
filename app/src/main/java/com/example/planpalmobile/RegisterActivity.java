@@ -41,7 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
         binding.btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = Objects.requireNonNull(binding.etLoginEmail.getText()).toString().trim();
+                String username = Objects.requireNonNull(binding.etUserName.getText()).toString().trim();
                 String password = Objects.requireNonNull(binding.etLoginPassword.getText()).toString().trim();
                 String opcInfo = Objects.requireNonNull(binding.etDescriptInfo.getText()).toString();
 

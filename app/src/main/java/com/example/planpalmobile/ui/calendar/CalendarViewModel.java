@@ -47,7 +47,7 @@ public class CalendarViewModel extends ViewModel {
         return diasCalendario;
     }
 
-    public LiveData<List<EventoDTOItem>> getEventos() {return  eventosList;}
+    public LiveData<List<EventoDTOItem>> getEventosList() {return  eventosList;}
 
     public LiveData<CalendarDay> getDiaSelecionado() {
         return diaSelecionado;
