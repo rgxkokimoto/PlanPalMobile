@@ -1,15 +1,28 @@
 package com.example.planpalmobile.data.repository;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import android.util.Log;
+
+import com.example.planpalmobile.data.database.EventApiControler;
 import com.example.planpalmobile.data.database.FirebaseDataSource;
 import com.example.planpalmobile.data.dto.EventoDTOItem;
+import com.example.planpalmobile.data.entities.Evento;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
+
 
 /*
     El Repositorio actúa como el intermediario entre Firestore y las capas superiores
@@ -21,6 +34,7 @@ public class EventosRepository {
 
     public EventosRepository() {
         this.dataSource = new FirebaseDataSource();
+
     }
 
     /**
@@ -43,16 +57,72 @@ public class EventosRepository {
     }
 
     /**
+     * Crea un nuevo evento en la base de datos.
+     * Devolvera un callback con el resultado de la operación.
+     * @param codigo
+     * @param dateIn
+     * @param dateEnd
+     * @param dscript
+     * @param horasDisponibles
+     * @param callback
+     */
+    public void createNewEvent(String codigo, Date dateIn, Date dateEnd, String dscript, List<Date> horasDisponibles, Consumer<String> callback) {
+
+        FirebaseUser userLoged = FirebaseAuth.getInstance().getCurrentUser();
+        if (userLoged == null) {
+            callback.accept("ERROR_USER");
+            return;
+        }
+
+        Map<Date, String> citasReservadas = new HashMap<>();
+
+        Evento nuevoEvento = new Evento(
+                codigo,
+                dscript,
+                dateIn,
+                dateEnd,
+                horasDisponibles,
+                citasReservadas,
+                userLoged.getEmail()
+        );
+
+        EventApiControler apiControler = EventApiControler.retrofit.create(EventApiControler.class);
+
+        apiControler.createEvent(nuevoEvento).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+                    Log.d("EventosRepository", "Evento creado correctamente: " + response.body());
+                    callback.accept("OK");
+                } else {
+                    Log.e("EventosRepository", "Error en la creación: " + response.code());
+                    callback.accept("ERROR_RESPONSE");
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.e("EventosRepository", "Fallo de red o servidor: " + t.getMessage());
+                callback.accept("ERROR_NETWORK");
+            }
+        });
+
+    }
+
+    /**
      * @param dateString
      * @return string ==> Date
      */
     public static Date mapDateFromString(String dateString) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.getDefault());
             return sdf.parse(dateString);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
     }
+
+
 
 }

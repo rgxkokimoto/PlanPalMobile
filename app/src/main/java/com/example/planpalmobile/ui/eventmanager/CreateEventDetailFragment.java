@@ -57,13 +57,12 @@ public class CreateEventDetailFragment extends Fragment {
 
         binding.btnPickDay.setOnClickListener(v -> { showDatePicker(binding.btnPickDay, binding.btnPickDayEn); });
         binding.btnPickTime.setOnClickListener(v -> { showTimePicker(binding.btnPickTime); });
-
         binding.btnPickDayEn.setOnClickListener(v -> { showDatePicker(binding.btnPickDayEn, null); });
         binding.btnPickTimeEnd.setOnClickListener(v -> { showTimePicker(binding.btnPickTimeEnd); });
 
         binding.btnNewDate.setOnClickListener(v -> { createNewMeet(); }); // TODO
 
-        binding.btnCrear.setOnClickListener(v -> { createdNewEvent(v);});
+        binding.btnCrear.setOnClickListener(this::createdNewEvent);
 
         binding.btnCancelar.setOnClickListener(v -> {
 
@@ -79,7 +78,6 @@ public class CreateEventDetailFragment extends Fragment {
         String title = binding.etTitulo.getText().toString();
         Date dateIn = StrMapDate(binding.btnPickDay, binding.btnPickTime);
         Date dateEnd = StrMapDate(binding.btnPickDayEn, binding.btnPickTimeEnd);
-
         String dscript = description;
 
         eMviewModel.validateNewEvent(
@@ -92,22 +90,39 @@ public class CreateEventDetailFragment extends Fragment {
 
         eMviewModel.respNewEventIsOk().observe(getViewLifecycleOwner(), message -> {
 
-            if (message.equals("ERROR_TITLE")) {
-                Toast.makeText(requireContext(), "El título no puede estar vacío", Toast.LENGTH_SHORT).show();
+            switch (message) {
+                case "ERROR_TITLE":
+                    Toast.makeText(requireContext(), "El título no puede estar vacío", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "ERROR_DATE":
+                    Toast.makeText(requireContext(), "La fecha de inicio debe ser anterior a la fecha de fin", Toast.LENGTH_SHORT).show();
+                    binding.btnPickDay.setBackgroundColor(getResources().getColor(color.red_error_btn));
+                    binding.btnPickTime.setBackgroundColor(getResources().getColor(color.red_error_btn));
+                    break;
+
+                case "ERROR_RESPONSE":
+                    Toast.makeText(requireContext(), "Error en la creación del evento", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "ERROR_USER":
+                    Toast.makeText(requireContext(), "Error del registro del usuario en el evento", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "ERROR_NETWORK":
+                    Toast.makeText(requireContext(), "Error al conectar con el servidor", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case "OK":
+                    Toast.makeText(requireContext(), "Evento creado correctamente", Toast.LENGTH_SHORT).show();
+                    binding.btnPickDay.setBackgroundColor(getResources().getColor(color.blank_background));
+                    binding.btnPickTime.setBackgroundColor(getResources().getColor(color.blank_background));
+
+                    Navigation.findNavController(v).popBackStack();
+
+                    break;
             }
 
-            if (message.equals("ERROR_DATE")) {
-                Toast.makeText(requireContext(), "La fecha de inicio debe ser anterior a la fecha de fin", Toast.LENGTH_SHORT).show();
-                binding.btnPickDay.setBackgroundColor(getResources().getColor(color.red_error_btn));
-                binding.btnPickTime.setBackgroundColor(getResources().getColor(color.red_error_btn));
-            }
-
-            if (message.equals("OK")) {
-                Toast.makeText(requireContext(), "Evento creado correctamente", Toast.LENGTH_SHORT).show();
-                Navigation.findNavController(v).popBackStack();
-                binding.btnPickDay.setBackgroundColor(getResources().getColor(color.blank_background));
-                binding.btnPickTime.setBackgroundColor(getResources().getColor(color.blank_background));
-            }
 
         });
     }

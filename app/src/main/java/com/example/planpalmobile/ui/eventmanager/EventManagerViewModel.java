@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.planpalmobile.data.repository.EventosRepository;
+
 import java.util.Date;
 import java.util.List;
 
@@ -12,16 +14,17 @@ import java.util.List;
  * ViewModel for {@link EventManagerFragment}.
  * Haber chavales este método se va a encargar tanto de la vista principal de este fragmento como de
  * la de crear y editar eventos.
-
+ * <p>
  * -Se encarga de la listas de fechas de fragmento FragmentEventManagerBinding
- *
- *- Se encarga de el trasporte de datos a la api de eventos mediante el repositorio desde el fragmento
+ * <p>
+ * - Se encarga de el trasporte de datos a la api de eventos mediante el repositorio desde el fragmento
  * de crear evento. tambien controla si los datos enviados son correctos y devuelve un callback con
  * un mensaje en consecuencia.
  */
 public class EventManagerViewModel extends ViewModel {
 
     private final MutableLiveData<String> respNewEvent = new MutableLiveData<>();
+    private final EventosRepository repository = new EventosRepository();
 
     public LiveData<String> respNewEventIsOk() {
         return respNewEvent;
@@ -41,11 +44,32 @@ public class EventManagerViewModel extends ViewModel {
             return;
         }
 
-        // TODO: Guardar evento en base de datos
+        /*
+         * Llamada al repositorio para crear un nuevo evento.
+         * Puede producir estas respuestas dependiendo del estado:
+         * OK
+         * ERROR_RESPONSE
+         * ERROR_NETWORK
+         */
+        repository.createNewEvent(title, dateIn, dateEnd, dscript, dateList,
+            resp -> {
+                respNewEvent.setValue(resp);
+            }
+        );
 
-        respNewEvent.setValue("OK");
     }
 
+    /**
+     * Valida si una nueva fecha de evento es válida.
+     * es decir tenemos que controlar la lógica del objeto
+     * para que el usuario no inserte citas fuera de la fecha
+     * del evento.
+     * @param newDate
+     * @param evetDate
+     * @param evenDate
+     * @param eventEndEnd
+     * @return
+     */
     public boolean validateNewMeet(Date newDate, List<Date> evetDate, Date evenDate, Date eventEndEnd) {
 
         if (newDate.before(evenDate)) {
