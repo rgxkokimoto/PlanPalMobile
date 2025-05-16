@@ -31,6 +31,8 @@ public class Evento {
         this.horaInicio = horaInicio;
         this.horaFin = horaFin;
         this.horasDisponibles = horasDisponibles;
+        this.citasReservadas = citasReservadas;
+        this.creadorId = creadorId;
     }
 
     public String getCodigo() {

@@ -74,6 +74,12 @@ public class EventosRepository {
             return;
         }
 
+
+        String creadorId = userLoged.getEmail();
+        if (creadorId != null && creadorId.contains("@gmail.com")) {
+            creadorId = creadorId.replace("@gmail.com", "");
+        }
+
         Map<Date, String> citasReservadas = new HashMap<>();
 
         Evento nuevoEvento = new Evento(
@@ -83,8 +89,10 @@ public class EventosRepository {
                 dateEnd,
                 horasDisponibles,
                 citasReservadas,
-                userLoged.getEmail()
+                creadorId
         );
+
+
 
         EventApiControler apiControler = EventApiControler.retrofit.create(EventApiControler.class);
 
