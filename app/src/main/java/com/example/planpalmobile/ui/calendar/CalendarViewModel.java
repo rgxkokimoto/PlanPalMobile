@@ -9,6 +9,7 @@ import com.example.planpalmobile.R;
 import com.example.planpalmobile.data.dto.EventoDTOItem;
 import com.example.planpalmobile.data.repository.EventosRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -16,12 +17,13 @@ import java.util.List;
 public class CalendarViewModel extends ViewModel {
     // Salida a produción sprint2
     private final MutableLiveData<List<CalendarDay>> diasCalendario = new MutableLiveData<>();
-    private final MutableLiveData<CalendarDay> diaSelecionado = new MutableLiveData<>();
-    private final MutableLiveData<String> tvdiaSelected = new MutableLiveData<>();
     private final MutableLiveData<List<EventoDTOItem>> eventosList = new MutableLiveData<>();
     private final EventosRepository repository = new EventosRepository();
+    private final MutableLiveData<LocalDate> fechaSeleccionada = new MutableLiveData<>();
+
 
     public CalendarViewModel () {
+
         // Pruebas con el calendario
         List<CalendarDay> listaEventos = new ArrayList<>();
 
@@ -37,10 +39,23 @@ public class CalendarViewModel extends ViewModel {
     }
 
     /**
-     * Con esto vamos a cargar los eventos de la Recyclerview desde CalendarFragment.java
+     * @DEPRECADO
+     * Ahora usamos setFechaSeleccionada para la UI de CalendarFragment
+     * Voy a mover este método al EventManager
      */
+
+    /*
     public void loadEventos() {
         repository.getEventItems(eventosList::postValue);
+    }
+    */
+
+
+     /*
+     *  BACK --> Devuelve lista de eventos por fecha
+     */
+    public void loadEventosPorFecha(Calendar fecha) {
+        repository.getEventsItemsByDate(fecha, eventosList::postValue);
     }
 
     public LiveData<List<CalendarDay>> getDiasCalendario() {
@@ -49,17 +64,7 @@ public class CalendarViewModel extends ViewModel {
 
     public LiveData<List<EventoDTOItem>> getEventosList() {return  eventosList;}
 
-    public LiveData<CalendarDay> getDiaSelecionado() {
-        return diaSelecionado;
-    }
 
-    public void setDiaSelecionado(CalendarDay calendarDay) {
-        diaSelecionado.setValue(calendarDay);
-    }
-
-    public  LiveData<String> getTvDiaSelecionado() {
-        return tvdiaSelected;
-    }
 
 
 }

@@ -36,26 +36,46 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         setupRecyclerView();
-        setUpEventosInRV();
-        calendarViewModel.loadEventos();
+        updateEventsInAdapter();
+        //calendarViewModel.loadEventos(); Deprecado
     }
 
+    /*
+        Este método se encarga de buscar los eventos y cargar en el calendario
+        los iconos correspondientes dando feedback visual al usuario.
+     */
     private void observeCalendarDays() {
         calendarViewModel.getDiasCalendario().observe(getViewLifecycleOwner(), eventos -> {
             binding.calendarView.setCalendarDays(eventos);
         });
     }
 
-    private void setUpEventosInRV() {
-        calendarViewModel.getEventosList().observe(getViewLifecycleOwner(), eventos -> {
-            adapter.updateList(eventos);
+    /*
+     *  Este método se encarga de escuchar los clicks del usuario
+     *  en el calendario y actualizar la UI con la fecha seleccionada
+     *  ademas esta relacionado con los métodos de filtrado por dia
+     *  que cargan la lista de eventos en el recycler view.
+     *
+     */
+    private void setupDayClickListener() {
+        binding.calendarView.setOnDayClickListener(eventDay -> {
+            Calendar fechaSeleccionada = eventDay.getCalendar();
+
+            int day = fechaSeleccionada.get(Calendar.DAY_OF_MONTH);
+            binding.tvDiaSelect.setText("Día " + day);
+
+            calendarViewModel.loadEventosPorFecha(fechaSeleccionada);
         });
     }
 
-    private void setupDayClickListener() {
-        binding.calendarView.setOnDayClickListener(eventDay -> {
-            int day = eventDay.getCalendar().get(Calendar.DAY_OF_MONTH);
-            binding.tvDiaSelect.setText("día " + day);
+    /*
+     *  Este método se encarga de actualizar la lista de eventos
+     *  en el recycler view cuando se actualiza la lista de eventos
+     *  debido a la interación del usuario con el calendario.
+     */
+    private void updateEventsInAdapter() {
+        calendarViewModel.getEventosList().observe(getViewLifecycleOwner(), eventos -> {
+            adapter.updateList(eventos);
         });
     }
 

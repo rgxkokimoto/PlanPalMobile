@@ -74,6 +74,28 @@ public class CreateEventDetailFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        adapter = new DateAdapter(dateList, new DateAdapter.OnDateActionListener() {
+            @Override
+            public void onDelete(Date date, int position) {
+                if (position >= 0 && position < dateList.size()) {
+                    dateList.remove(position);
+                    adapter.notifyItemRemoved(position);
+                } else {
+                    Log.w("DeleteError", "Intento de borrar índice fuera de rango: " + position);
+                }
+                adapter.notifyItemRemoved(position);
+            }
+        });
+
+        binding.rvDateEvent.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.rvDateEvent.setAdapter(adapter);
+    }
+
+
     private void createdNewEvent(View v) {
         String title = binding.etTitulo.getText().toString();
         Date dateIn = StrMapDate(binding.btnPickDay, binding.btnPickTime);
@@ -127,26 +149,6 @@ public class CreateEventDetailFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        adapter = new DateAdapter(dateList, new DateAdapter.OnDateActionListener() {
-            @Override
-            public void onDelete(Date date, int position) {
-                if (position >= 0 && position < dateList.size()) {
-                    dateList.remove(position);
-                    adapter.notifyItemRemoved(position);
-                } else {
-                    Log.w("DeleteError", "Intento de borrar índice fuera de rango: " + position);
-                }
-                adapter.notifyItemRemoved(position);
-            }
-        });
-
-        binding.rvDateEvent.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.rvDateEvent.setAdapter(adapter);
-    }
 
     private Date StrMapDate(MaterialButton btnPickDay, MaterialButton btnPickTime) {
         String dateStr = btnPickDay.getText().toString();
