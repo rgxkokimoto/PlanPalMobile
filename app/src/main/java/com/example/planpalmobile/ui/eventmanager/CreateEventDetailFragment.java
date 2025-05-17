@@ -23,7 +23,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.planpalmobile.R;
 import com.example.planpalmobile.databinding.FragmentCreateEventDetailBinding;
 import com.google.android.material.button.MaterialButton;
 
@@ -60,7 +59,7 @@ public class CreateEventDetailFragment extends Fragment {
         binding.btnPickDayEn.setOnClickListener(v -> { showDatePicker(binding.btnPickDayEn, null); });
         binding.btnPickTimeEnd.setOnClickListener(v -> { showTimePicker(binding.btnPickTimeEnd); });
 
-        binding.btnNewDate.setOnClickListener(v -> { createNewMeet(); }); // TODO
+        binding.btnNewDate.setOnClickListener(v -> { createNewMeet(); });
 
         binding.btnCrear.setOnClickListener(this::createdNewEvent);
 
@@ -100,6 +99,8 @@ public class CreateEventDetailFragment extends Fragment {
         String title = binding.etTitulo.getText().toString();
         Date dateIn = StrMapDate(binding.btnPickDay, binding.btnPickTime);
         Date dateEnd = StrMapDate(binding.btnPickDayEn, binding.btnPickTimeEnd);
+        Log.d("CreateEventDetailFragment", "DateIn: " + dateIn);
+        Log.d("CreateEventDetailFragment", "DateEnd: " + dateEnd);
         String dscript = description;
 
         eMviewModel.validateNewEvent(
@@ -152,16 +153,20 @@ public class CreateEventDetailFragment extends Fragment {
 
     private Date StrMapDate(MaterialButton btnPickDay, MaterialButton btnPickTime) {
         String dateStr = btnPickDay.getText().toString();
-        String timeStr = btnPickTime.getText().toString();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        String timeStr = btnPickTime.getText().toString(); // "23:46"
+
+        String combined = dateStr + " " + timeStr; // "17/05/2025 23:46"
+        SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+        inputFormat.setLenient(false);
+
         try {
-            Log.d("DateStr", dateStr + " " + timeStr);
-            return sdf.parse(dateStr + " " + timeStr);
+            return inputFormat.parse(combined);
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
         }
     }
+
 
     private void putNewDesc() {
         EditText input = new EditText(requireContext());
@@ -201,13 +206,19 @@ public class CreateEventDetailFragment extends Fragment {
                 calendar.set(Calendar.MINUTE, minute1);
 
                 Date newDate = calendar.getTime();
+                Log.d("CreateEventDetailFragment", "NewDateMeet: " + newDate);
+
 
                 Date evetInitDate = StrMapDate(binding.btnPickDay, binding.btnPickTime);
                 Date eventEndEnd = StrMapDate(binding.btnPickDayEn, binding.btnPickTimeEnd);
+                Log.d("CreateEventDetailFragment", "DateInMeet: " + evetInitDate);
+                Log.d("CreateEventDetailFragment", "DateEndMeet: " + eventEndEnd);
+
+
 
                 boolean isNewMeetValid = eMviewModel.validateNewMeet(newDate, dateList, evetInitDate, eventEndEnd);
 
-                
+
 
                 if (!isNewMeetValid) {
                     Toast.makeText(requireContext(), "Fecha invalida, fuera del evento oh repetida", Toast.LENGTH_SHORT).show();

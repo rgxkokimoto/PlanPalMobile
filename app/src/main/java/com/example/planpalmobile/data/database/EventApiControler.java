@@ -2,6 +2,8 @@ package com.example.planpalmobile.data.database;
 
 
 import com.example.planpalmobile.data.entities.Evento;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -14,10 +16,14 @@ public interface EventApiControler {
 
     String API_URL = "http://192.168.1.148:8080/";
 
+    Gson gson = new GsonBuilder()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            .create();
+
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(API_URL)
             .addConverterFactory(ScalarsConverterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build();
 
     @POST("eventos")
