@@ -1,13 +1,13 @@
 package com.example.planpalmobile.data.database;
 
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,20 +46,52 @@ public class FirebaseDataSource {
                 });
     }
 
-    public Task<DocumentReference> crearEvento(Map<String, Object> eventoMap) {
-        return db.collection("eventos").add(eventoMap);
+    /**
+     * Va a recoger los eventos todos los eventos de un dia en concreto.
+     * @param fecha
+     * @param callback
+     *
+     * Para usamos el parametro fecha para crear un avanico
+     * y usamos métodos nativos de firebase para hacer el filtrado
+     * esto ahorrara muchas llamadas inecesarias cada vez que se quiera
+     * ver los eventos de un dia. 
+     *
+     */
+    public void getEventosItemByDateSelected(Calendar fecha, Consumer<List<Map<String, Object>>> callback) {
+        Calendar start = (Calendar) fecha.clone();
+        start.set(Calendar.HOUR_OF_DAY, 0);
+        start.set(Calendar.MINUTE, 0);
+        start.set(Calendar.SECOND, 0);
+        start.set(Calendar.MILLISECOND, 0);
+
+        Calendar end = (Calendar) fecha.clone();
+        end.set(Calendar.HOUR_OF_DAY, 23);
+        end.set(Calendar.MINUTE, 59);
+        end.set(Calendar.SECOND, 59);
+        end.set(Calendar.MILLISECOND, 999);
+
+        Timestamp startTimestamp = new Timestamp(start.getTime());
+        Timestamp endTimestamp = new Timestamp(end.getTime());
+
+        db.collection("eventos")
+                .whereGreaterThanOrEqualTo("horaInicio", startTimestamp)
+                .whereLessThanOrEqualTo("horaInicio", endTimestamp)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<Map<String, Object>> resultado = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : snapshot) {
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("codigo", doc.getString("codigo"));
+                        data.put("horaInicio", doc.getTimestamp("horaInicio"));
+                        resultado.add(data);
+                    }
+                    callback.accept(resultado);
+                })
+                .addOnFailureListener(e -> {
+                    callback.accept(new ArrayList<>());
+                });
     }
 
-    public Task<Void> actualizarEvento(String id, Map<String, Object> cambios) {
-        return db.collection("eventos").document(id).update(cambios);
-    }
 
-    public Task<Void> eliminarEvento(String id) {
-        return db.collection("eventos").document(id).delete();
-    }
-
-    public Task<DocumentSnapshot> getEventoPorId(String id) {
-        return db.collection("eventos").document(id).get();
-    }
 }
 

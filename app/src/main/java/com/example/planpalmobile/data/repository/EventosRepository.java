@@ -16,12 +16,15 @@ import com.google.firebase.auth.FirebaseUser;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
+import com.google.firebase.Timestamp;
+
 
 
 /*
@@ -47,8 +50,9 @@ public class EventosRepository {
 
             for (Map<String, Object> map : listaMapas) {
                 String codigo = (String) map.get("codigo");
-                String horaInicioStr = (String) map.get("horaInicio");
-                Date horaInicio = mapDateFromString(horaInicioStr);
+
+                Timestamp timestamp = (Timestamp) map.get("horaInicio");
+                Date horaInicio = timestamp.toDate();
 
                 lista.add(new EventoDTOItem(codigo, horaInicio));
             }
@@ -56,15 +60,34 @@ public class EventosRepository {
         });
     }
 
+
+    /*
+     * Devuelve la lista de eventos por un dia, selecionada por el usuario
+     */
+    public void getEventsItemsByDate(Calendar fecha, Consumer<List<EventoDTOItem>> callback) {
+        dataSource.getEventosItemByDateSelected(fecha, listaMapas -> {
+            List<EventoDTOItem> listEventDays = new ArrayList<>();
+
+            for (Map<String, Object> map : listaMapas) {
+                String codigo = (String) map.get("codigo");
+
+                Timestamp timestamp = (Timestamp) map.get("horaInicio");
+                Date horaInicio = timestamp.toDate();
+
+                listEventDays.add(new EventoDTOItem(codigo, horaInicio));
+            }
+
+            callback.accept(listEventDays);
+        });
+    }
+
+
+
     /**
      * Crea un nuevo evento en la base de datos.
      * Devolvera un callback con el resultado de la operación.
-     * @param codigo
-     * @param dateIn
-     * @param dateEnd
-     * @param dscript
-     * @param horasDisponibles
-     * @param callback
+     *  User --> Petición Crear Evento --> Api
+     *  User <-- Respuesta Crear Evento <-- Api
      */
     public void createNewEvent(String codigo, Date dateIn, Date dateEnd, String dscript, List<Date> horasDisponibles, Consumer<String> callback) {
 
@@ -130,7 +153,6 @@ public class EventosRepository {
             throw new RuntimeException(e);
         }
     }
-
 
 
 }
