@@ -27,17 +27,6 @@ public class CalendarViewModel extends ViewModel {
         setIconsDateInCalendarGUI();
     }
 
-    /**
-     * @DEPRECADO
-     * Ahora usamos setFechaSeleccionada para la UI de CalendarFragment
-     * Voy a mover este método al EventManager
-     */
-
-    /*
-    public void loadEventos() {
-        repository.getEventItems(eventosList::postValue);
-    }
-    */
 
 
     /**

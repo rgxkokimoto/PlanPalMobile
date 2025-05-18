@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.applandeo.materialcalendarview.EventDay;
+import com.applandeo.materialcalendarview.exceptions.OutOfDateRangeException;
 import com.example.planpalmobile.R;
 import com.example.planpalmobile.databinding.FragmentCalendarBinding;
 
@@ -45,6 +47,21 @@ public class CalendarFragment extends Fragment {
 
         observeCalendarDays();
         setupDayClickListener();
+
+        binding.ibtnActualDay.setOnClickListener(v -> {
+            Calendar today = Calendar.getInstance();
+
+            today.set(Calendar.HOUR_OF_DAY, 0);
+            today.set(Calendar.MINUTE, 0);
+            today.set(Calendar.SECOND, 0);
+            today.set(Calendar.MILLISECOND, 0);
+
+            try {
+                binding.calendarView.setDate(today);
+            } catch (OutOfDateRangeException e) {
+                e.printStackTrace();
+            }
+        });
 
         return binding.getRoot();
     }
