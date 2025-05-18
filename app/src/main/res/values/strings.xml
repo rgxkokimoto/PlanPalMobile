@@ -53,4 +53,5 @@
     <string name="_15_50">15:50</string>
     <string name="exampleDate">2025/03/23 at 18:00</string>
     <string name="todo">TODO</string>
+    <string name="no_events">no events\n</string>
 </resources>
