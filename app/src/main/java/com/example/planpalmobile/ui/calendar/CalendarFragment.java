@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -23,6 +24,8 @@ public class CalendarFragment extends Fragment {
     private FragmentCalendarBinding binding;
     private ItemEventRecyclerAdapter adapter;
     private CalendarViewModel calendarViewModel;
+    private View emptyView;
+    private ViewStub viewStubEmpty;
 
     @Override
     public void onResume() {
@@ -37,6 +40,9 @@ public class CalendarFragment extends Fragment {
         binding = FragmentCalendarBinding.inflate(inflater, container, false);
         calendarViewModel = new ViewModelProvider(this).get(CalendarViewModel.class);
 
+        viewStubEmpty = binding.getRoot().findViewById(R.id.viewStubEmpty);
+        emptyView = null;
+
         observeCalendarDays();
         setupDayClickListener();
 
@@ -49,6 +55,15 @@ public class CalendarFragment extends Fragment {
         updateEventsInAdapter();
         //calendarViewModel.loadEventos(); Deprecado
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+
+    // METODOS DE LA UI
 
     /*
         Este método se encarga de buscar los eventos y cargar en el calendario
@@ -71,7 +86,6 @@ public class CalendarFragment extends Fragment {
      *  en el calendario y actualizar la UI con la fecha seleccionada
      *  ademas esta relacionado con los métodos de filtrado por dia
      *  que cargan la lista de eventos en el recycler view.
-     *
      */
     private void setupDayClickListener() {
         binding.calendarView.setOnDayClickListener(eventDay -> {
@@ -92,6 +106,22 @@ public class CalendarFragment extends Fragment {
     private void updateEventsInAdapter() {
         calendarViewModel.getEventosList().observe(getViewLifecycleOwner(), eventos -> {
             adapter.updateList(eventos);
+
+            if (eventos != null && !eventos.isEmpty()) {
+                binding.rvListEventItems.setVisibility(View.VISIBLE);
+
+                if (emptyView != null) {
+                    emptyView.setVisibility(View.GONE);
+                }
+            } else {
+                binding.rvListEventItems.setVisibility(View.GONE);
+
+                if (emptyView == null) {
+                    emptyView = viewStubEmpty.inflate();
+                } else {
+                    emptyView.setVisibility(View.VISIBLE);
+                }
+            }
         });
     }
 
@@ -101,9 +131,5 @@ public class CalendarFragment extends Fragment {
         binding.rvListEventItems.setAdapter(adapter);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
+
 }
