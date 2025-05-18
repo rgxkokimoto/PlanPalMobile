@@ -7,22 +7,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
+import com.bumptech.glide.Glide;
 import com.example.planpalmobile.LoginActivity;
 import com.example.planpalmobile.R;
 import com.example.planpalmobile.databinding.FragmentPerfilBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import android.util.Log;
-
-import java.util.Objects;
-
 
 public class PerfilFragment extends Fragment {
 
@@ -37,7 +36,8 @@ public class PerfilFragment extends Fragment {
         TextView correoTextView = root.findViewById(R.id.correoTextView);
         TextView descripcionTextView = root.findViewById(R.id.descripcionTextView);
         TextView nombreUsuarioTextView = root.findViewById(R.id.nombreUsuarioTextView);
-        Button btnCerrarSesion = root.findViewById(R.id.btnCerrarSesion); // <-- Botón
+        ImageView imagenPerfil = root.findViewById(R.id.imagenPerfil);
+        Button btnCerrarSesion = root.findViewById(R.id.btnCerrarSesion);
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -55,27 +55,40 @@ public class PerfilFragment extends Fragment {
                             String correo = document.getString("email");
                             String descripcion = document.getString("opcInfo");
                             String nombreUsuario = document.getString("id");
+                            String urlFoto = document.getString("fotoPerfil");
 
-                            correoTextView.setText(getString(R.string.correo_alert) + correo);
-                            descripcionTextView.setText(getString(R.string.descripci_n_alert) + descripcion);
+                            correoTextView.setText("Correo: " + correo);
+                            descripcionTextView.setText("Descripción: " + descripcion);
                             nombreUsuarioTextView.setText(nombreUsuario);
+
+                            if (urlFoto != null && !urlFoto.isEmpty()) {
+                                Glide.with(this)
+                                        .load(urlFoto)
+                                        .placeholder(R.drawable.imgperfil) // imagen por defecto mientras carga
+                                        .error(R.drawable.imgperfil) // imagen si falla la carga
+                                        .into(imagenPerfil);
+                            } else {
+                                imagenPerfil.setImageResource(R.drawable.imgperfil);
+                            }
                         } else {
                             correoTextView.setText("No se encontraron datos.");
                             descripcionTextView.setText("");
+                            imagenPerfil.setImageResource(R.drawable.imgperfil);
                         }
                     })
                     .addOnFailureListener(e -> {
-                        correoTextView.setText(R.string.error_al_cargar_datos);
+                        correoTextView.setText("Error al cargar datos.");
                         descripcionTextView.setText("");
+                        imagenPerfil.setImageResource(R.drawable.imgperfil);
                         Log.e("NotificationsFragment", "Error al obtener datos de Firestore", e);
                     });
 
         } else {
-            correoTextView.setText(R.string.usuario_no_autenticado);
+            correoTextView.setText("Usuario no autenticado.");
             descripcionTextView.setText("");
+            imagenPerfil.setImageResource(R.drawable.imgperfil);
         }
 
-        // ---------- Acción del botón Cerrar sesión ----------
         btnCerrarSesion.setOnClickListener(v -> {
             new AlertDialog.Builder(getContext())
                     .setTitle("Cerrar sesión")
@@ -85,7 +98,7 @@ public class PerfilFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        requireActivity().finish();
+                        getActivity().finish();
                     })
                     .setNegativeButton("Cancelar", null)
                     .show();
@@ -100,3 +113,4 @@ public class PerfilFragment extends Fragment {
         binding = null;
     }
 }
+

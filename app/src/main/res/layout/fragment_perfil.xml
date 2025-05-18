@@ -1,93 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EFE9FD">
+    android:background="#F5F6FA"
+    android:padding="24dp">
 
-    <!-- Encabezado con nombre -->
+    <!-- Título -->
     <TextView
         android:id="@+id/tituloPerfil"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/perfil"
-        android:textSize="24sp"
+        android:text="Perfil"
+        android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="@color/mainBlue"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.05"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Imagen de perfil genérica -->
+    <!-- Imagen de perfil circular con sombra -->
     <ImageView
         android:id="@+id/imagenPerfil"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="24dp"
         android:src="@drawable/imgperfil"
-        android:layout_marginTop="16dp"
+        android:contentDescription="Foto de perfil"
+        android:scaleType="centerCrop"
+        android:clipToOutline="true"
+        android:outlineProvider="background"
+        android:elevation="8dp"
         app:layout_constraintTop_toBottomOf="@id/tituloPerfil"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="@string/foto_de_perfil"
-        android:padding="8dp" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Nombre de usuario -->
+    <!-- Nombre usuario -->
     <TextView
         android:id="@+id/nombreUsuarioTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="20sp"
-        android:textColor="#333333"
+        android:text="Nombre de Usuario"
+        android:textSize="22sp"
+        android:textColor="#222222"
         android:textStyle="bold"
-        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@id/imagenPerfil"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center" />
 
     <!-- Correo -->
     <TextView
         android:id="@+id/correoTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/correo"
+        android:text="Correo: usuario@correo.com"
         android:textSize="16sp"
-        android:textColor="#555555"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
+        android:textColor="#666666"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@id/nombreUsuarioTextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center"/>
 
     <!-- Descripción -->
     <TextView
         android:id="@+id/descripcionTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/descripcion_perfil"
+        android:text="Descripción: Información adicional sobre el usuario."
         android:textSize="16sp"
-        android:textColor="#555555"
+        android:textColor="#666666"
         android:layout_marginTop="16dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
         app:layout_constraintTop_toBottomOf="@id/correoTextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center"/>
 
+    <!-- Botón Cerrar sesión -->
     <Button
         android:id="@+id/btnCerrarSesion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="48dp"
         android:backgroundTint="@color/mainBlue"
-        android:text="@string/cerrar_sesi_n"
+        android:text="Cerrar sesión"
         android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-medium"
+        android:letterSpacing="0.05"
+        app:layout_constraintTop_toBottomOf="@id/descripcionTextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/descripcionTextView" />
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:cornerRadius="12dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
 
