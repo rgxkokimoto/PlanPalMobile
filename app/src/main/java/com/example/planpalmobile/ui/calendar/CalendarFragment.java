@@ -9,16 +9,26 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.applandeo.materialcalendarview.EventDay;
+import com.example.planpalmobile.R;
 import com.example.planpalmobile.databinding.FragmentCalendarBinding;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class CalendarFragment extends Fragment {
 
     private FragmentCalendarBinding binding;
     private ItemEventRecyclerAdapter adapter;
     private CalendarViewModel calendarViewModel;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        calendarViewModel.setIconsDateInCalendarGUI();
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -45,8 +55,14 @@ public class CalendarFragment extends Fragment {
         los iconos correspondientes dando feedback visual al usuario.
      */
     private void observeCalendarDays() {
-        calendarViewModel.getDiasCalendario().observe(getViewLifecycleOwner(), eventos -> {
-            binding.calendarView.setCalendarDays(eventos);
+        calendarViewModel.getFechasEventos().observe(getViewLifecycleOwner(), fechas -> {
+            List<EventDay> eventos = new ArrayList<>();
+
+            for (Calendar fecha : fechas) {
+                eventos.add(new EventDay(fecha, R.drawable.baseline_event_24));
+            }
+
+            binding.calendarView.setEvents(eventos);
         });
     }
 

@@ -26,10 +26,10 @@ public class FirebaseDataSource {
     }
 
     /**
-     * @param callback
-     * @return
      * Retorna los elementos necesarios mostrarlos en el item de la RecyclerView principal
      * del calendario.
+     * Estaba deprecado pero ahora se usa para cargar los iconos de los eventos
+     *
      */
     public Task<QuerySnapshot> getEventosItem(Consumer<List<Map<String, Object>>> callback) {
         return db.collection("eventos")
@@ -39,7 +39,9 @@ public class FirebaseDataSource {
                     for (QueryDocumentSnapshot doc : snapshot) {
                         Map<String, Object> data = new HashMap<>();
                         data.put("codigo", doc.getString("codigo"));
-                        data.put("horaInicio", doc.getString("horaInicio"));
+                        // Cambiar esto:
+                        // data.put("horaInicio", doc.getString("horaInicio"));
+                        data.put("horaInicio", doc.getTimestamp("horaInicio"));
                         resultado.add(data);
                     }
                     callback.accept(resultado);
