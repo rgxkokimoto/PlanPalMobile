@@ -1,10 +1,14 @@
 package com.example.planpalmobile.ui.calendar;
 
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.planpalmobile.R;
 import com.example.planpalmobile.data.dto.EventoDTOItem;
 import com.example.planpalmobile.databinding.FragmentEventItemBinding;
 
@@ -46,6 +50,17 @@ public class ItemEventRecyclerAdapter
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
             String dateFormat = sdf.format(hiContext);
             holder.binding.tvDateEvent.setText(dateFormat);
+
+            holder.itemView.setOnClickListener(v -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("codigo_evento", event.getId());
+
+                Navigation.findNavController(v).navigate(
+                        R.id.action_navigation_calendar_to_pickMeetEventDetailFragment,
+                        bundle
+                );
+            });
+
         }
     }
 

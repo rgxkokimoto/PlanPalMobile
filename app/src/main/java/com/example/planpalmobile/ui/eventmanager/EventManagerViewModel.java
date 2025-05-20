@@ -4,12 +4,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.planpalmobile.data.entities.Evento;
 import com.example.planpalmobile.data.repository.EventosRepository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-
+// TODO Mover a carpeta common
 /**
  * ViewModel for {@link EventManagerFragment}.
  * Haber chavales este método se va a encargar tanto de la vista principal de este fragmento como de
@@ -88,6 +90,11 @@ public class EventManagerViewModel extends ViewModel {
 
         return true;
     }
+
+
+
+
+
 
 
 }

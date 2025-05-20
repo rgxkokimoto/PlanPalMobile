@@ -55,4 +55,10 @@
     <string name="todo">TODO</string>
     <string name="no_events">no events\n</string>
     <string name="calendar_icon">calendar icon\n</string>
+    <string name="event_title">Event Title</string>
+    <string name="may_19_vie_18_30_to_may_19_vie_23_30">May 19,vie 18:30 to May 19,vie 23:30</string>
+    <string name="descripci_n_del_evento">Descripción del evento</string>
+    <string name="ver_m_s">Ver más</string>
+    <string name="aqu_va_una_descripci_n_muy_larga_que_podr_a_ocupar_muchas_l_neas_si_no_se_controla_correctamente_este_texto_debe_poder_expandirse_y_comprimirse">Aquí va una descripción muy larga que podría ocupar muchas líneas si no se controla correctamente. Este texto debe poder expandirse y comprimirse.</string>
+    <string name="reservar_una_cita">Reservar una cita</string>
 </resources>

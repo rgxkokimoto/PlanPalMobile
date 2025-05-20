@@ -38,9 +38,8 @@ public class FirebaseDataSource {
                     List<Map<String, Object>> resultado = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : snapshot) {
                         Map<String, Object> data = new HashMap<>();
+                        data.put("id", doc.getId());
                         data.put("codigo", doc.getString("codigo"));
-                        // Cambiar esto:
-                        // data.put("horaInicio", doc.getString("horaInicio"));
                         data.put("horaInicio", doc.getTimestamp("horaInicio"));
                         resultado.add(data);
                     }
@@ -83,6 +82,7 @@ public class FirebaseDataSource {
                     List<Map<String, Object>> resultado = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : snapshot) {
                         Map<String, Object> data = new HashMap<>();
+                        data.put("id", doc.getId());
                         data.put("codigo", doc.getString("codigo"));
                         data.put("horaInicio", doc.getTimestamp("horaInicio"));
                         resultado.add(data);
@@ -91,6 +91,25 @@ public class FirebaseDataSource {
                 })
                 .addOnFailureListener(e -> {
                     callback.accept(new ArrayList<>());
+                });
+    }
+
+    public void getEventoByCodigo(String codigo, Consumer<Map<String, Object>> callback) {
+        db.collection("eventos")
+                .whereEqualTo("codigo", codigo)
+                .limit(1)  // Solo queremos un documento que coincida
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    if (!snapshot.isEmpty()) {
+                        QueryDocumentSnapshot doc = (QueryDocumentSnapshot) snapshot.getDocuments().get(0);
+                        Map<String, Object> data = doc.getData();
+                        callback.accept(data);
+                    } else {
+                        callback.accept(null);  // No encontrado
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    callback.accept(null);  // Error en la consulta
                 });
     }
 

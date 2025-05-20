@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = binding.navView;
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.createEventDetailFragment) {
+            if (destination.getId() == R.id.createEventDetailFragment || destination.getId() == R.id.pickMeetEventDetailFragment) {
                 bottomNav.setVisibility(View.GONE);
             } else {
                 bottomNav.setVisibility(View.VISIBLE);

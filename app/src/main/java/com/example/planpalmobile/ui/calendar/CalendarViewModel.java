@@ -45,7 +45,6 @@ public class CalendarViewModel extends ViewModel {
         });
     }
 
-
      /*
      *  BACK --> Devuelve lista de eventos por fecha
      */

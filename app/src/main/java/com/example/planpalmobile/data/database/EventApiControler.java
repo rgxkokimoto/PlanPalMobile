@@ -10,7 +10,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface EventApiControler {
 
@@ -25,6 +27,9 @@ public interface EventApiControler {
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build();
+
+    @GET("eventos/{codigo}")
+    Call<Evento> getEvent(@Path("codigo") String codigoEvento);
 
     @POST("eventos")
     Call<String> createEvent(@Body Evento evento);

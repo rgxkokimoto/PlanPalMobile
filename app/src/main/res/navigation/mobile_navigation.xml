@@ -9,7 +9,11 @@
         android:id="@+id/navigation_calendar"
         android:name="com.example.planpalmobile.ui.calendar.CalendarFragment"
         android:label="@string/title_calendar"
-        tools:layout="@layout/fragment_calendar" />
+        tools:layout="@layout/fragment_calendar" >
+        <action
+            android:id="@+id/action_navigation_calendar_to_pickMeetEventDetailFragment"
+            app:destination="@id/pickMeetEventDetailFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_event_manager"
@@ -32,6 +36,11 @@
         android:name="com.example.planpalmobile.ui.eventmanager.CreateEventDetailFragment"
         android:label="fragment_create_event_detail"
         tools:layout="@layout/fragment_create_event_detail" />
+    <fragment
+        android:id="@+id/pickMeetEventDetailFragment"
+        android:name="com.example.planpalmobile.ui.calendar.PickMeetEventDetailFragment"
+        android:label="fragment_pick_meet_event_detail"
+        tools:layout="@layout/fragment_pick_meet_event_detail" />
 
 
 </navigation>

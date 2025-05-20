@@ -49,16 +49,80 @@ public class EventosRepository {
             List<EventoDTOItem> lista = new ArrayList<>();
 
             for (Map<String, Object> map : listaMapas) {
+                String id = (String) map.get("id");
                 String codigo = (String) map.get("codigo");
 
                 Timestamp timestamp = (Timestamp) map.get("horaInicio");
                 Date horaInicio = timestamp.toDate();
 
-                lista.add(new EventoDTOItem(codigo, horaInicio));
+                lista.add(new EventoDTOItem(codigo, horaInicio, id));
             }
             callback.accept(lista);
         });
     }
+
+
+    // TODO
+    public void getEvento(String codigoEvento, Consumer<Evento> callback) {
+        EventApiControler api = EventApiControler.retrofit.create(EventApiControler.class);
+        Call<Evento> call = api.getEvent(codigoEvento);
+
+        call.enqueue(new Callback<Evento>() {
+            @Override
+            public void onResponse(Call<Evento> call, Response<Evento> response) {
+                if (response.isSuccessful() && response.body() != null) {
+
+                    Evento evento = response.body();
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+                    try {
+
+                        Evento eventoMapeado = new Evento();
+                        eventoMapeado.setCodigo(evento.getCodigo());
+                        eventoMapeado.setDescripcion(evento.getDescripcion());
+                        eventoMapeado.setCreadorId(evento.getCreadorId());
+                        eventoMapeado.setHoraInicio(evento.getHoraInicio());
+                        eventoMapeado.setHoraFin(evento.getHoraFin());
+
+                        List<Date> horas = new ArrayList<>();
+                        for (Object item : evento.getHorasDisponibles()) {
+                            if (item instanceof String) {
+                                horas.add(sdf.parse((String) item));
+                            } else if (item instanceof Date){
+                                horas.add((Date) item);
+                            }
+                        }
+                        eventoMapeado.setHorasDisponibles(horas);
+
+                        Map<Date, String> citas = new HashMap<>();
+                        for (Map.Entry<?, String> entry : evento.getCitasReservadas().entrySet()) {
+                            if (entry.getKey() instanceof String) {
+                                citas.put(sdf.parse((String) entry.getKey()), entry.getValue());
+                            } else if (entry.getKey() instanceof Date) {
+                                citas.put((Date) entry.getKey(), entry.getValue());
+                            }
+                        }
+                        eventoMapeado.setCitasReservadas(citas);
+
+                        callback.accept(eventoMapeado);
+                    } catch (Exception e) {
+                        Log.e("EventosRepository", "Error al mapear el evento en repository " + e.getMessage());
+                        callback.accept(null);
+                    }
+
+                } else {
+                    Log.e("EventosRepository", "Error en la respuesta: " + response.code());
+                    callback.accept(null);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Evento> call, Throwable t) {
+                Log.e("EventosRepository", "Fallo de red o servidor: " + t.getMessage());
+                callback.accept(null);
+            }
+        });
+    }
+
 
 
     /*
@@ -69,12 +133,13 @@ public class EventosRepository {
             List<EventoDTOItem> listEventDays = new ArrayList<>();
 
             for (Map<String, Object> map : listaMapas) {
+                String id = (String) map.get("id");
                 String codigo = (String) map.get("codigo");
 
                 Timestamp timestamp = (Timestamp) map.get("horaInicio");
                 Date horaInicio = timestamp.toDate();
 
-                listEventDays.add(new EventoDTOItem(codigo, horaInicio));
+                listEventDays.add(new EventoDTOItem(codigo, horaInicio, id));
             }
 
             callback.accept(listEventDays);
@@ -141,18 +206,8 @@ public class EventosRepository {
 
     }
 
-    /**
-     * @param dateString
-     * @return string ==> Date
-     */
-    public static Date mapDateFromString(String dateString) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.getDefault());
-            return sdf.parse(dateString);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
+
 
 
 }
