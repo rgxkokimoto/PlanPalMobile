@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnIniciarSesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = String.valueOf(binding.etLoginEmail.getText());
+                String email = String.valueOf(binding.etTitulo.getText());
                 String password = String.valueOf(binding.etLoginPassword.getText());
 
                 if (!email.isEmpty()) {

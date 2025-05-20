@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.calendar.PickMeetEventDetailFragment"
+    android:padding="16dp"
+    android:background="@color/sec_blue"
+    >
+
+    <TextView
+        android:id="@+id/tvTitlepPMED"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/event_title"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:textColor="@color/white"
+        app:drawableEndCompat="@drawable/icons8_sol_48"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="8dp"
+        android:gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/tvTitleDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="25dp"
+        android:textColor="@color/white"
+        android:text="@string/fecha_del_evento"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitlepPMED" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvDateEvent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitleDate"
+        app:cardCornerRadius="15dp"
+        >
+
+        <TextView
+            android:padding="16dp"
+            android:id="@+id/tvDateEvent"
+            android:textStyle="bold"
+            android:text="@string/may_19_vie_18_30_to_may_19_vie_23_30"
+            android:layout_width="wrap_content"
+            android:drawablePadding="10dp"
+            android:layout_height="wrap_content"
+            app:drawableStartCompat="@drawable/baseline_today_24" />
+
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:text="@string/descripci_n_del_evento"
+        android:layout_marginTop="25dp"
+        android:textColor="@color/white"
+        android:id="@+id/tvTitleDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cvDateEvent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvDescEvent"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitleDescription">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:padding="15dp"
+                android:id="@+id/tvDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:text="@string/aqu_va_una_descripci_n_muy_larga_que_podr_a_ocupar_muchas_l_neas_si_no_se_controla_correctamente_este_texto_debe_poder_expandirse_y_comprimirse"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvToggleDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ver_m_s"
+                android:textColor="@color/mainBlue"
+                android:textStyle="bold"
+                android:paddingTop="8dp" />
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/materialButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/bar_colorTest2"
+        android:text="@string/reservar_una_cita"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cvDescEvent" />
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvReservList"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/materialButton">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvListReservedMeets"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="25dp"
+                android:layout_weight="1"
+                />
+
+            <ViewStub
+                android:id="@+id/viewStubEmpty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout="@layout/no_events_l" />
+
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -43,7 +43,7 @@
         >
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_login_email"
+            android:id="@+id/etUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress" />
@@ -81,8 +81,8 @@
 
     <EditText
         android:id="@+id/etDescriptInfo"
-        android:layout_width="match_parent"
-        android:layout_height="225dp"
+        android:layout_width="360dp"
+        android:layout_height="74dp"
         android:layout_marginTop="6dp"
         android:autofillHints=""
         android:background="@drawable/custom_edittext_background"
@@ -99,10 +99,25 @@
         android:id="@+id/btnRegister"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:backgroundTint="@color/mainBlue"
         android:text="@string/registrarse"
         android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivProfilePic" />
+
+
+    <ImageView
+        android:id="@+id/ivProfilePic"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/imgperfil"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etDescriptInfo" />
@@ -111,7 +126,7 @@
         android:id="@+id/tvToLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="20dp"
         android:textSize="17sp"
         android:textAlignment="center"
         android:text="@string/ya_tienes_cuenta_haz_clic_aqu_para_iniciar_sesi_n"

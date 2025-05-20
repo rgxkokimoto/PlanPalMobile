@@ -25,6 +25,16 @@ public class Evento {
         this.horaInicio = horaInicio;
     }
 
+    public Evento(String codigo, String descripcion, Date horaInicio, Date horaFin, List<Date> horasDisponibles, Map<Date, String> citasReservadas, String creadorId) {
+        this.codigo = codigo;
+        this.descripcion = descripcion;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
+        this.horasDisponibles = horasDisponibles;
+        this.citasReservadas = citasReservadas;
+        this.creadorId = creadorId;
+    }
+
     public String getCodigo() {
         return codigo;
     }

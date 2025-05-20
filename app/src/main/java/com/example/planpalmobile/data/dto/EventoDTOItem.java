@@ -7,12 +7,18 @@ import java.util.Date;
  *  permitiendo indexar los datos requeridos
  */
 public class EventoDTOItem {
+    public String id;
     public String codigo;
     public Date horaInicio;
 
-    public EventoDTOItem(String codigo, Date horaInicio) {
+    public EventoDTOItem(String codigo, Date horaInicio, String id) {
         this.codigo = codigo;
+        this.id = id;
         this.horaInicio = horaInicio;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getCodigo() {

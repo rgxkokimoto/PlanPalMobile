@@ -9,17 +9,38 @@
         android:id="@+id/navigation_calendar"
         android:name="com.example.planpalmobile.ui.calendar.CalendarFragment"
         android:label="@string/title_calendar"
-        tools:layout="@layout/fragment_calendar" />
+        tools:layout="@layout/fragment_calendar" >
+        <action
+            android:id="@+id/action_navigation_calendar_to_pickMeetEventDetailFragment"
+            app:destination="@id/pickMeetEventDetailFragment" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.planpalmobile.ui.dashboard.DashboardFragment"
+        android:id="@+id/navigation_event_manager"
+        android:name="com.example.planpalmobile.ui.eventmanager.EventManagerFragment"
         android:label="@string/title_todoLeft"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_event_manager">
+        <action
+            android:id="@+id/action_navigation_event_manager_to_createEventDetailFragment"
+            app:destination="@id/createEventDetailFragment" />
+    </fragment>
+
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.planpalmobile.ui.notifications.NotificationsFragment"
+        android:id="@+id/navigation_perfil"
+        android:name="com.example.planpalmobile.ui.perfil.PerfilFragment"
         android:label="@string/title_todoRight"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_perfil" />
+    <fragment
+        android:id="@+id/createEventDetailFragment"
+        android:name="com.example.planpalmobile.ui.eventmanager.CreateEventDetailFragment"
+        android:label="fragment_create_event_detail"
+        tools:layout="@layout/fragment_create_event_detail" />
+    <fragment
+        android:id="@+id/pickMeetEventDetailFragment"
+        android:name="com.example.planpalmobile.ui.calendar.PickMeetEventDetailFragment"
+        android:label="fragment_pick_meet_event_detail"
+        tools:layout="@layout/fragment_pick_meet_event_detail" />
+
+
 </navigation>
