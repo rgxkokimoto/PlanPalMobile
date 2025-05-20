@@ -1,5 +1,7 @@
 package com.example.planpalmobile.data.database;
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -41,11 +43,34 @@ public class FirebaseDataSource {
                         data.put("id", doc.getId());
                         data.put("codigo", doc.getString("codigo"));
                         data.put("horaInicio", doc.getTimestamp("horaInicio"));
+                        data.put("creadorId", doc.getString("creadorId")); // <-- AÑADIR ESTO
+                        // Puedes añadir más campos si los necesitas:
+                        // data.put("descripcion", doc.getString("descripcion"));
+                        // data.put("horaFin", doc.getTimestamp("horaFin"));
                         resultado.add(data);
                     }
                     callback.accept(resultado);
                 });
     }
+
+
+
+    public void eliminarEventoPorCodigo(String codigoEvento, Consumer<Boolean> callback) {
+        FirebaseFirestore.getInstance().collection("eventos")
+                .whereEqualTo("codigo", codigoEvento)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        doc.getReference().delete();
+                    }
+                    callback.accept(true);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firebase", "Error eliminando evento: " + e.getMessage());
+                    callback.accept(false);
+                });
+    }
+
 
     /**
      * Va a recoger los eventos todos los eventos de un dia en concreto.

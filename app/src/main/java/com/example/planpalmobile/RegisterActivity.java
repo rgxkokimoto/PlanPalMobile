@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -160,10 +161,31 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     Toast.makeText(this, "Guardado completado!", Toast.LENGTH_SHORT).show();
                     binding.progressVarReg.setVisibility(View.INVISIBLE);
+
+                /*    FirebaseMessaging.getInstance().subscribeToTopic("welcome")
+                            .addOnCompleteListener(subTask -> {
+                                if (subTask.isSuccessful()) {
+                                    Log.d("FCM", "Suscrito al topic 'welcome'");
+                                } else {
+                                    Log.e("FCM", "Error al suscribirse al topic 'welcome'", subTask.getException());
+                                }
+                            });
+
+                    FirebaseMessaging.getInstance().subscribeToTopic("eventos")
+                            .addOnCompleteListener(subTask -> {
+                                if (subTask.isSuccessful()) {
+                                    Log.d("FCM", "Suscrito al topic 'eventos'");
+                                } else {
+                                    Log.e("FCM", "Error al suscribirse al topic 'eventos'", subTask.getException());
+                                }
+                            });*/
+
+
                     // Navegar a MainActivity y terminar esta pantalla
                     startActivity(new Intent(this, MainActivity.class));
                     finish();
                 })
+
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error al guardar usuario", Toast.LENGTH_SHORT).show();
                     binding.progressVarReg.setVisibility(View.INVISIBLE);

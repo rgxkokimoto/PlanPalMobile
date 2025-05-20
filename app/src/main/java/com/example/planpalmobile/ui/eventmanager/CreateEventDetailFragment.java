@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -141,6 +142,20 @@ public class CreateEventDetailFragment extends Fragment {
                     binding.btnPickDay.setBackgroundColor(getResources().getColor(color.blank_background));
                     binding.btnPickTime.setBackgroundColor(getResources().getColor(color.blank_background));
 
+          /*          // 🚀 Enviar notificación a todos los usuarios suscritos al topic "eventos"
+                    FirebaseFunctions.getInstance()
+                            .getHttpsCallable("sendNewEventNotification")
+                            .call(new HashMap<String, Object>() {{
+                                put("title", "Nuevo evento disponible");
+                                put("body", "Se ha creado: " + title);  // Usa el título real del evento
+                            }})
+                            .addOnSuccessListener(result1 -> {
+                                Log.d("FCM", "Notificación enviada");
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("FCM", "Error enviando notificación", e);
+                            });
+*/
                     Navigation.findNavController(v).popBackStack();
 
                     break;
