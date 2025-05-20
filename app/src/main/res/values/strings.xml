@@ -55,4 +55,5 @@
     <string name="todo">TODO</string>
     <string name="no_events">no events\n</string>
     <string name="calendar_icon">calendar icon\n</string>
+    <string name="eliminar">Eliminar</string>
 </resources>
