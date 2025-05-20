@@ -67,10 +67,20 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation("androidx.activity:activity-ktx:1.8.0") // Para ActivityResult API
+
+
+
+
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+    implementation("com.google.firebase:firebase-storage:20.3.0")
+
+
+    // build.gradle (nivel app)
+   /* implementation ("com.google.firebase:firebase-messaging:23.4.0")
+    implementation ("com.google.firebase:firebase-functions:20.3.1")
+*/
 
 
 }

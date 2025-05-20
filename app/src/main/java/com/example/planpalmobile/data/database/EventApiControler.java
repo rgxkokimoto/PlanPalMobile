@@ -14,7 +14,7 @@ import retrofit2.http.POST;
 
 public interface EventApiControler {
 
-    String API_URL = "http://192.168.1.148:8080/";
+    String API_URL = "http://192.168.1.52:8080/";
 
     Gson gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")

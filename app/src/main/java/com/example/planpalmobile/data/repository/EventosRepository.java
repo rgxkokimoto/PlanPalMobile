@@ -24,7 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
 import com.google.firebase.Timestamp;
-
+import com.google.gson.Gson;
 
 
 /*
@@ -81,6 +81,65 @@ public class EventosRepository {
         });
     }
 
+    public void getEventosUsuario(String userId, EventosCallback callback) {
+        if (userId == null || userId.isEmpty()) {
+            callback.onError("USER_ID_NULL");
+            return;
+        }
+
+        dataSource.getEventosItem(listaMapas -> {
+            List<Evento> eventosDelUsuario = new ArrayList<>();
+
+            for (Map<String, Object> map : listaMapas) {
+                String creadorId = (String) map.get("creadorId");
+                Log.d("getEventosUsuario", "Evento con creadorId: " + creadorId);  // <--- Aquí el log
+
+                if (creadorId != null && creadorId.equals(userId)) {
+                    try {
+                        String codigo = (String) map.get("codigo");
+                        String descripcion = (String) map.get("descripcion");
+
+                        Timestamp tsInicio = (Timestamp) map.get("horaInicio");
+                        Timestamp tsFin = (Timestamp) map.get("horaFin");
+
+                        Date horaInicio = tsInicio != null ? tsInicio.toDate() : null;
+                        Date horaFin = tsFin != null ? tsFin.toDate() : null;
+
+                        // Recuperar lista de fechas disponibles
+                        List<Timestamp> listaTimestamps = (List<Timestamp>) map.get("fechasDisponibles");
+                        List<Date> fechasDisponibles = new ArrayList<>();
+                        if (listaTimestamps != null) {
+                            for (Timestamp ts : listaTimestamps) {
+                                fechasDisponibles.add(ts.toDate());
+                            }
+                        }
+
+                        Evento evento = new Evento(
+                                codigo,
+                                descripcion,
+                                horaInicio,
+                                horaFin,
+                                fechasDisponibles,
+                                new HashMap<>(), // Asumimos sin citas reservadas
+                                creadorId
+                        );
+
+                        eventosDelUsuario.add(evento);
+                    } catch (Exception e) {
+                        Log.e("getEventosUsuario", "Error al parsear evento: " + e.getMessage());
+                    }
+                }
+            }
+
+            callback.onSuccess(eventosDelUsuario);
+        });
+    }
+
+
+    public void eliminarEvento(String codigoEvento, Consumer<Boolean> callback) {
+        dataSource.eliminarEventoPorCodigo(codigoEvento, callback);
+    }
+
 
 
     /**
@@ -97,11 +156,12 @@ public class EventosRepository {
             return;
         }
 
-
         String creadorId = userLoged.getEmail();
         if (creadorId != null && creadorId.contains("@gmail.com")) {
             creadorId = creadorId.replace("@gmail.com", "");
         }
+
+        Log.d("EventosRepository", "creadorId usado para evento: " + creadorId);
 
         Map<Date, String> citasReservadas = new HashMap<>();
 
@@ -115,10 +175,11 @@ public class EventosRepository {
                 creadorId
         );
 
+        Gson gson = new Gson();
+        Log.d("EventosRepository", "Evento JSON: " + gson.toJson(nuevoEvento));
 
-
+        // Llamada retrofit
         EventApiControler apiControler = EventApiControler.retrofit.create(EventApiControler.class);
-
         apiControler.createEvent(nuevoEvento).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -131,15 +192,14 @@ public class EventosRepository {
                 }
             }
 
-
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 Log.e("EventosRepository", "Fallo de red o servidor: " + t.getMessage());
                 callback.accept("ERROR_NETWORK");
             }
         });
-
     }
+
 
     /**
      * @param dateString
@@ -153,6 +213,13 @@ public class EventosRepository {
             throw new RuntimeException(e);
         }
     }
+
+
+    public interface EventosCallback {
+        void onSuccess(List<Evento> eventos);
+        void onError(String error);
+    }
+
 
 
 }
