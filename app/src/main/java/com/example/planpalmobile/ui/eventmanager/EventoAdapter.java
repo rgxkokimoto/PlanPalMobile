@@ -1,6 +1,7 @@
 package com.example.planpalmobile.ui.eventmanager;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,10 +74,21 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoView
             holder.tvFechas.setText("Fecha no disponible");
         }
 
-        // Ocultar la descripción del ítem
-        //holder.tvDescripcion.setVisibility(View.GONE);
+        holder.btnVerDetalles.setOnClickListener(v -> {
+            Intent intent = new Intent(v.getContext(), EventoDetalleActivity.class);
+            intent.putExtra("codigo", evento.getCodigo());
+            intent.putExtra("descripcion", evento.getDescripcion());
+            if (evento.getHoraInicio() != null) {
+                intent.putExtra("horaInicio", evento.getHoraInicio().getTime());
+            }
+            if (evento.getHoraFin() != null) {
+                intent.putExtra("horaFin", evento.getHoraFin().getTime());
+            }
+            v.getContext().startActivity(intent);
+        });
 
-       // holder.btnVerDetalles.setOnClickListener(v -> listener.onVerDetallesClick(evento));
+
+        // holder.btnVerDetalles.setOnClickListener(v -> listener.onVerDetallesClick(evento));
         holder.btnEliminar.setOnClickListener(v -> {
             new AlertDialog.Builder(v.getContext())
                     .setTitle("Confirmar eliminación")
@@ -105,8 +117,8 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoView
             super(itemView);
             tvTitulo = itemView.findViewById(R.id.tvTituloEvento);
             tvFechas = itemView.findViewById(R.id.tvFechasEvento);
-            //tvDescripcion = itemView.findViewById(R.id.tvDescripcionEvento);
-            //btnVerDetalles = itemView.findViewById(R.id.btnVerDetalles);
+            tvDescripcion = itemView.findViewById(R.id.tvDescripcion);
+            btnVerDetalles = itemView.findViewById(R.id.btnVerDetalles);
             btnEliminar = itemView.findViewById(R.id.btnEliminar);
         }
     }

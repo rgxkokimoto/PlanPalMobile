@@ -23,7 +23,7 @@
             android:id="@+id/tvFechasEvento"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Inicio - Fin"
+            android:text="Inicio "
             android:textSize="14sp" />
 
         <LinearLayout
@@ -33,11 +33,13 @@
             android:gravity="end"
             android:paddingTop="8dp">
 
-           <!-- <Button
+            <Button
                 android:id="@+id/btnVerDetalles"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ver detalles" />-->
+                android:text="Ver detalles"
+                android:backgroundTint="@color/mainBlue"
+                />
 
             <Button
                 android:id="@+id/btnEliminar"
