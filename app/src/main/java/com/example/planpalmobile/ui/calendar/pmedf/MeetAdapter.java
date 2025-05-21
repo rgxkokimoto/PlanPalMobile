@@ -1,4 +1,4 @@
-package com.example.planpalmobile.ui.calendar;
+package com.example.planpalmobile.ui.calendar.pmedf;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +25,16 @@ public class MeetAdapter extends RecyclerView.Adapter<MeetAdapter.MeetViewHolder
         this.meetList = meetList;
     }
 
+    public static class MeetViewHolder extends RecyclerView.ViewHolder {
+        TextView tvMeetDate, tvMeetUser;
+
+        public MeetViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvMeetDate = itemView.findViewById(R.id.tvMeetDate);
+            tvMeetUser = itemView.findViewById(R.id.tvMeetUser);
+        }
+    }
+
     @NonNull
     @Override
     public MeetViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -48,13 +58,5 @@ public class MeetAdapter extends RecyclerView.Adapter<MeetAdapter.MeetViewHolder
         return meetList != null ? meetList.size() : 0;
     }
 
-    public static class MeetViewHolder extends RecyclerView.ViewHolder {
-        TextView tvMeetDate, tvMeetUser;
 
-        public MeetViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvMeetDate = itemView.findViewById(R.id.tvMeetDate);
-            tvMeetUser = itemView.findViewById(R.id.tvMeetUser);
-        }
-    }
 }

@@ -1,6 +1,5 @@
-package com.example.planpalmobile.ui.calendar;
+package com.example.planpalmobile.ui.calendar.pmedf;
 
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

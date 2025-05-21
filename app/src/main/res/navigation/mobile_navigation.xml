@@ -38,7 +38,7 @@
         tools:layout="@layout/fragment_create_event_detail" />
     <fragment
         android:id="@+id/pickMeetEventDetailFragment"
-        android:name="com.example.planpalmobile.ui.calendar.PickMeetEventDetailFragment"
+        android:name="com.example.planpalmobile.ui.calendar.pmedf.PickMeetEventDetailFragment"
         android:label="fragment_pick_meet_event_detail"
         tools:layout="@layout/fragment_pick_meet_event_detail" />
 
