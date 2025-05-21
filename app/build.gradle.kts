@@ -70,6 +70,9 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("androidx.activity:activity-ktx:1.8.0") // Para ActivityResult API
 
+   // implementation ("com.google.firebase:firebase-analytics")
+
+
 
 
     // Para las fotos

@@ -55,6 +55,8 @@ public class FirebaseDataSource {
 
 
 
+
+
     public void eliminarEventoPorCodigo(String codigoEvento, Consumer<Boolean> callback) {
         FirebaseFirestore.getInstance().collection("eventos")
                 .whereEqualTo("codigo", codigoEvento)
@@ -119,10 +121,43 @@ public class FirebaseDataSource {
                 });
     }
 
+    public  Task<QuerySnapshot> getEventsByUser(String user, Consumer<List<Map<String, Object>>> callback) {
+        return db.collection("eventos")
+                .whereEqualTo("creadorId", user)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<Map<String, Object>> resultado = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : snapshot) {
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("id", doc.getId());
+                        data.put("codigo", doc.getString("codigo"));
+                        data.put("horaInicio", doc.getTimestamp("horaInicio"));
+                        data.put("creadorId", doc.getString("creadorId"));
+                        data.put("descripcion", doc.getString("descripcion"));
+                        data.put("horaFin", doc.getTimestamp("horaFin"));
+                        data.put("fechasDisponibles", doc.get("fechasDisponibles"));
+                        data.put("citasReservadas", doc.get("citasReservadas"));
+                        resultado.add(data);
+                    }
+                    callback.accept(resultado);
+                })
+                .addOnFailureListener(e -> {
+                    callback.accept(new ArrayList<>());
+                });
+
+
+    }
+
+
+    /**
+     * DEPRECADO para este ya usamos la API
+     * @param codigo
+     * @param callback
+     */
     public void getEventoByCodigo(String codigo, Consumer<Map<String, Object>> callback) {
         db.collection("eventos")
                 .whereEqualTo("codigo", codigo)
-                .limit(1)  // Solo queremos un documento que coincida
+                .limit(1)
                 .get()
                 .addOnSuccessListener(snapshot -> {
                     if (!snapshot.isEmpty()) {
@@ -130,11 +165,11 @@ public class FirebaseDataSource {
                         Map<String, Object> data = doc.getData();
                         callback.accept(data);
                     } else {
-                        callback.accept(null);  // No encontrado
+                        callback.accept(null);
                     }
                 })
                 .addOnFailureListener(e -> {
-                    callback.accept(null);  // Error en la consulta
+                    callback.accept(null);
                 });
     }
 

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.function.Consumer;
 import com.google.firebase.Timestamp;
 import com.google.gson.Gson;
@@ -41,7 +42,7 @@ public class EventosRepository {
     }
 
     /**
-     * Obtiene los eventos resumidos creados por un usuario específico.
+     * Obtiene los eventos resumidos para el item de la RecyclerView.
      * @param callback Callback que recibe la lista de DTOs.
      */
     public void getEventItems(Consumer<List<EventoDTOItem>> callback) {
@@ -62,7 +63,11 @@ public class EventosRepository {
     }
 
 
-    // TODO
+    /**
+     * Obtiene un evento por su codigo para la vista de detalles. y el pick meet
+     * @param codigoEvento
+     * @param callback
+     */
     public void getEvento(String codigoEvento, Consumer<Evento> callback) {
         EventApiControler api = EventApiControler.retrofit.create(EventApiControler.class);
         Call<Evento> call = api.getEvent(codigoEvento);
@@ -126,7 +131,7 @@ public class EventosRepository {
 
 
     /*
-     * Devuelve la lista de eventos por un dia, selecionada por el usuario
+     * Devuelve la lista de DTO de eventos por un dia, selecionada por el usuario
      */
     public void getEventsItemsByDate(Calendar fecha, Consumer<List<EventoDTOItem>> callback) {
         dataSource.getEventosItemByDateSelected(fecha, listaMapas -> {
@@ -147,59 +152,68 @@ public class EventosRepository {
     }
 
     public void getEventosUsuario(String userId, EventosCallback callback) {
-        if (userId == null || userId.isEmpty()) {
-            callback.onError("USER_ID_NULL");
-            return;
-        }
-
-        dataSource.getEventosItem(listaMapas -> {
+        dataSource.getEventsByUser(userId, listaMapas -> {
             List<Evento> eventosDelUsuario = new ArrayList<>();
 
             for (Map<String, Object> map : listaMapas) {
-                String creadorId = (String) map.get("creadorId");
-                Log.d("getEventosUsuario", "Evento con creadorId: " + creadorId);  // <--- Aquí el log
+                try {
+                    String codigo = (String) map.get("codigo");
+                    String descripcion = (String) map.get("descripcion");
 
-                if (creadorId != null && creadorId.equals(userId)) {
-                    try {
-                        String codigo = (String) map.get("codigo");
-                        String descripcion = (String) map.get("descripcion");
+                    Timestamp tsInicio = (Timestamp) map.get("horaInicio");
+                    Timestamp tsFin = (Timestamp) map.get("horaFin");
 
-                        Timestamp tsInicio = (Timestamp) map.get("horaInicio");
-                        Timestamp tsFin = (Timestamp) map.get("horaFin");
+                    Date horaInicio = tsInicio != null ? tsInicio.toDate() : null;
+                    Date horaFin = tsFin != null ? tsFin.toDate() : null;
 
-                        Date horaInicio = tsInicio != null ? tsInicio.toDate() : null;
-                        Date horaFin = tsFin != null ? tsFin.toDate() : null;
+                    List<Timestamp> listaTimestamps = (List<Timestamp>) map.get("fechasDisponibles");
+                    List<Date> fechasDisponibles = new ArrayList<>();
+                    if (listaTimestamps != null) {
+                        for (Timestamp ts : listaTimestamps) {
+                            fechasDisponibles.add(ts.toDate());
+                        }
+                    }
 
-                        // Recuperar lista de fechas disponibles
-                        List<Timestamp> listaTimestamps = (List<Timestamp>) map.get("fechasDisponibles");
-                        List<Date> fechasDisponibles = new ArrayList<>();
-                        if (listaTimestamps != null) {
-                            for (Timestamp ts : listaTimestamps) {
-                                fechasDisponibles.add(ts.toDate());
+                    Map<String, String> citasFirestore = (Map<String, String>) map.get("citasReservadas");
+                    Map<Date, String> citasReservadas = new HashMap<>();
+
+                    if (citasFirestore != null) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
+                        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                        for (Map.Entry<String, String> entry : citasFirestore.entrySet()) {
+                            try {
+                                Date fecha = sdf.parse(entry.getKey());
+                                if (fecha != null) {
+                                    citasReservadas.put(fecha, entry.getValue());
+                                }
+                            } catch (ParseException e) {
+                                Log.e("ParseCita", "Fecha inválida: " + entry.getKey());
                             }
                         }
-
-                        Evento evento = new Evento(
-                                codigo,
-                                descripcion,
-                                horaInicio,
-                                horaFin,
-                                fechasDisponibles,
-                                new HashMap<>(), // Asumimos sin citas reservadas
-                                creadorId
-                        );
-
-                        eventosDelUsuario.add(evento);
-                    } catch (Exception e) {
-                        Log.e("getEventosUsuario", "Error al parsear evento: " + e.getMessage());
                     }
+
+                    String creadorId = (String) map.get("creadorId");
+
+                    Evento evento = new Evento(
+                            codigo,
+                            descripcion,
+                            horaInicio,
+                            horaFin,
+                            fechasDisponibles,
+                            citasReservadas,
+                            creadorId
+                    );
+
+                    eventosDelUsuario.add(evento);
+                } catch (Exception e) {
+                    Log.e("getEventosUsuario", "Error al parsear evento: " + e.getMessage());
                 }
             }
 
             callback.onSuccess(eventosDelUsuario);
         });
     }
-
 
     public void eliminarEvento(String codigoEvento, Consumer<Boolean> callback) {
         dataSource.eliminarEventoPorCodigo(codigoEvento, callback);
