@@ -64,4 +64,7 @@
     <string name="eliminar">Eliminar</string>
     <string name="_12_may_2023_15_30">12 MAY, 2023 15:30</string>
     <string name="reservado_por_name_user">Reservado por: Name_User</string>
+    <string name="nombre_de_usuario">Nombre de Usuario</string>
+    <string name="correo_usuario_correo_com">Correo: usuario@correo.com</string>
+    <string name="descripci_n_informaci_n_adicional_sobre_el_usuario">Descripción: Información adicional sobre el usuario.</string>
 </resources>
