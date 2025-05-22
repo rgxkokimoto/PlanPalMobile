@@ -1,4 +1,4 @@
-package com.example.planpalmobile.ui.calendar;
+package com.example.planpalmobile.ui.calendar.pmedf;
 
 import android.os.Bundle;
 
@@ -46,19 +46,43 @@ public class PickMeetEventDetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         setupRecyclerView();
 
-        String codigoEvento = getArguments().getString("codigo_evento");
-        Log.d("PickMeetEventDetailFragment", "Código del evento recibido: " + codigoEvento);
+        String id = getArguments().getString("codigo_evento");
+        Log.d("PickMeetEventDetailFragment", "Código del evento recibido: " + id);
 
-        if (codigoEvento != null) {
-            viewModel.cargarEvento(codigoEvento);
+        if (id != null) {
+            viewModel.cargarEvento(id);
         }
 
-
         viewModel.getEvento().observe(getViewLifecycleOwner(), this::bindEvento);
-        
+
+        binding.btnReservarCita.setOnClickListener(v -> {
+
+            Evento evento = viewModel.getEvento().getValue();
+
+            if (evento == null) {
+                Toast.makeText(requireContext(), "Evento no cargado", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            List<Date> fechasDisponibles = evento.getHorasDisponibles();
+
+            if (fechasDisponibles == null || fechasDisponibles.isEmpty()) {
+                Toast.makeText(requireContext(), "No hay fechas disponibles", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            PickDateDialogFragment dialog = new PickDateDialogFragment(fechasDisponibles, fechaSeleccionada -> {
+                Toast.makeText(requireContext(), "Cita seleccionada: " + fechaSeleccionada.toString(), Toast.LENGTH_SHORT).show();
+
+                viewModel.reservarCita(id, fechaSeleccionada);
+
+            });
+
+            dialog.show(getParentFragmentManager(), "PickDateDialog");
+        });
+
     }
 
     private void bindEvento(Evento evento) {
@@ -113,6 +137,7 @@ public class PickMeetEventDetailFragment extends Fragment {
         } else {
             binding.viewStubEmpty.setVisibility(View.GONE);
             adapter = new MeetAdapter(listaReservas);
+            binding.rvListReservedMeets.setAdapter(adapter);
         }
     }
 
@@ -128,5 +153,8 @@ public class PickMeetEventDetailFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+
+
 }
 

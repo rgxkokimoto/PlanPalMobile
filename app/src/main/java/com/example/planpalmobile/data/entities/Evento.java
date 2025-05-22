@@ -59,9 +59,7 @@ public class Evento {
         this.horaInicio = horaInicio;
     }
 
-    public Date getHoraFin() {
-        return horaFin;
-    }
+    public Date getHoraFin() { return horaFin; }
 
     public void setHoraFin(Date horaFin) {
         this.horaFin = horaFin;

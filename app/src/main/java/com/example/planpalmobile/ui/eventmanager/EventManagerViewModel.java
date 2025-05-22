@@ -30,11 +30,9 @@ public class EventManagerViewModel extends ViewModel {
     }
 
     public void cargarEventosDelUsuario(String userId) {
-        Log.d("EventManagerViewModel", "Cargando eventos para userId: " + userId);
         repository.getEventosUsuario(userId, new EventosRepository.EventosCallback() {
             @Override
             public void onSuccess(List<Evento> eventos) {
-                Log.d("EventManagerViewModel", "Eventos recibidos: " + (eventos != null ? eventos.size() : "null"));
                 eventosUsuario.setValue(eventos);
             }
 
@@ -45,6 +43,7 @@ public class EventManagerViewModel extends ViewModel {
             }
         });
     }
+
 
     public void eliminarEventoDeFirestore(String codigoEvento) {
         FirebaseFirestore.getInstance()
