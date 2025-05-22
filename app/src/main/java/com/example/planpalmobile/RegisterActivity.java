@@ -97,6 +97,11 @@ public class RegisterActivity extends AppCompatActivity {
                         });
             }
         });
+
+        binding.tvToLogin.setOnClickListener(v -> {
+            startActivity(new Intent(this, LoginActivity.class));
+        });
+
     }
 
     private void abrirGaleria() {
