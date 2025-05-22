@@ -48,11 +48,11 @@ public class PickMeetEventDetailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setupRecyclerView();
 
-        String codigoEvento = getArguments().getString("codigo_evento");
-        Log.d("PickMeetEventDetailFragment", "Código del evento recibido: " + codigoEvento);
+        String id = getArguments().getString("codigo_evento");
+        Log.d("PickMeetEventDetailFragment", "Código del evento recibido: " + id);
 
-        if (codigoEvento != null) {
-            viewModel.cargarEvento(codigoEvento);
+        if (id != null) {
+            viewModel.cargarEvento(id);
         }
 
         viewModel.getEvento().observe(getViewLifecycleOwner(), this::bindEvento);
@@ -76,7 +76,8 @@ public class PickMeetEventDetailFragment extends Fragment {
             PickDateDialogFragment dialog = new PickDateDialogFragment(fechasDisponibles, fechaSeleccionada -> {
                 Toast.makeText(requireContext(), "Cita seleccionada: " + fechaSeleccionada.toString(), Toast.LENGTH_SHORT).show();
 
-                // TODO: llamar al ViewModel guardar la cita
+                viewModel.reservarCita(id, fechaSeleccionada);
+
             });
 
             dialog.show(getParentFragmentManager(), "PickDateDialog");
@@ -136,6 +137,7 @@ public class PickMeetEventDetailFragment extends Fragment {
         } else {
             binding.viewStubEmpty.setVisibility(View.GONE);
             adapter = new MeetAdapter(listaReservas);
+            binding.rvListReservedMeets.setAdapter(adapter);
         }
     }
 
@@ -151,5 +153,8 @@ public class PickMeetEventDetailFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+
+
 }
 

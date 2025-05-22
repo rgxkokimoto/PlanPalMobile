@@ -174,10 +174,21 @@ public class FirebaseDataSource {
     }
 
 
-    /**
-     *
-     */
-    
+    public void actualizarEvento(String idDocument, Map<String, Object> datosActualizados, Consumer<Boolean> callback) {
+        db.collection("eventos")
+                .document(idDocument)
+                .update(datosActualizados)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("FirebaseDataSource", "Evento actualizado correctamente");
+                    callback.accept(true);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirebaseDataSource", "Error actualizando evento: " + e.getMessage());
+                    callback.accept(false);
+                });
+    }
+
+
 
 
 }

@@ -284,6 +284,26 @@ public class EventosRepository {
     }
 
     /**
+     * Actualiza un evento en la base de datos desde La fuente de datos
+     * @param codigoEvento
+     * @param datosActualizados
+     * @param callback
+     */
+    public void actualizarEvento(String codigoEvento, Map<String, Object> datosActualizados, Consumer<Boolean> callback) {
+        dataSource.actualizarEvento(codigoEvento, datosActualizados, success -> {
+            if (success) {
+                Log.d("EventosRepository", "Evento actualizado correctamente");
+                callback.accept(true);
+            } else {
+                Log.e("EventosRepository", "Error al actualizar el evento");
+                callback.accept(false);
+            }
+        });
+    }
+
+
+
+    /**
      * @param dateString
      * @return string ==> Date
      */
