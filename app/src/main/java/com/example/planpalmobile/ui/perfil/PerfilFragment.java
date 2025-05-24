@@ -56,6 +56,7 @@ public class PerfilFragment extends Fragment {
 
                             descripcionTextView.setText("Descripción: " + (descripcion != null ? descripcion : ""));
                             nombreUsuarioTextView.setText(nombreUsuario != null ? nombreUsuario : "");
+                            correoTextView.setText(userLoged.getEmail());
 
                             if (urlFoto != null && !urlFoto.isEmpty()) {
                                 Glide.with(this)
