@@ -87,7 +87,8 @@ public class RegisterActivity extends AppCompatActivity {
                                 Toast.makeText(this, "Usuario registrado con éxito", Toast.LENGTH_SHORT).show();
                                 FirebaseUser firebaseUser = mAuth.getCurrentUser();
                                 if (firebaseUser != null) {
-                                    guardarUsuarioEnDatabase(username, opcInfo);
+                                    String uid = firebaseUser.getUid();
+                                    guardarUsuarioEnDatabase(uid, username, opcInfo);
                                 }
                             } else {
                                 Toast.makeText(this, "Error: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
@@ -131,15 +132,19 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void guardarUsuarioEnDatabase(String username, String opcInfo) {
-        // Usamos el correo sin la parte del dominio como ID
-        String id = username.split("@")[0];  // 'usuario' de usuario@gmail.com
+    private void guardarUsuarioEnDatabase(String id ,String name, String opcInfo) {
+
+        if(binding.etLoginName.getText() == null) {
+            name = name.split("@")[0];  // 'usuario' de usuario@gmail.com
+        }
 
         if (imagenPerfilUri != null) {
-            FirebaseStorage.getInstance().getReference("fotosPerfil/" + id + ".jpg")
+
+            String finalName = name;
+            FirebaseStorage.getInstance().getReference("fotosPerfil/" + name + ".jpg")
                     .putFile(imagenPerfilUri)
                     .addOnSuccessListener(taskSnapshot -> taskSnapshot.getStorage().getDownloadUrl()
-                            .addOnSuccessListener(uri -> guardarInfoConURL(id, username, opcInfo, uri.toString()))
+                            .addOnSuccessListener(uri -> guardarInfoConURL(id, finalName, opcInfo, uri.toString()))
                     )
                     .addOnFailureListener(e -> {
                         Toast.makeText(this, "Error al subir imagen", Toast.LENGTH_SHORT).show();
@@ -148,54 +153,33 @@ public class RegisterActivity extends AppCompatActivity {
                     });
         } else {
             // Si no hay imagen, guardamos sin URL
-            guardarInfoConURL(id, username, opcInfo, null);
+            guardarInfoConURL(id, name, opcInfo, null);
         }
     }
 
 
-    private void guardarInfoConURL(String id, String email, String opcInfo, @Nullable String urlImagen) {
+    private void guardarInfoConURL(String uid, String name, String opcInfo, @Nullable String urlImagen) {
         Map<String, Object> usuario = new HashMap<>();
-        usuario.put("id", id);
-        usuario.put("email", email);
+        usuario.put("name", name);
         usuario.put("opcInfo", opcInfo);
         if (urlImagen != null) usuario.put("fotoPerfil", urlImagen);
 
         db.collection("usuarios")
-                .document(id)
+                .document(uid)
                 .set(usuario)
                 .addOnCompleteListener(task -> {
-                    Toast.makeText(this, "Guardado completado!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "¡Guardado completado!", Toast.LENGTH_SHORT).show();
                     binding.progressVarReg.setVisibility(View.INVISIBLE);
 
-                /*    FirebaseMessaging.getInstance().subscribeToTopic("welcome")
-                            .addOnCompleteListener(subTask -> {
-                                if (subTask.isSuccessful()) {
-                                    Log.d("FCM", "Suscrito al topic 'welcome'");
-                                } else {
-                                    Log.e("FCM", "Error al suscribirse al topic 'welcome'", subTask.getException());
-                                }
-                            });
-
-                    FirebaseMessaging.getInstance().subscribeToTopic("eventos")
-                            .addOnCompleteListener(subTask -> {
-                                if (subTask.isSuccessful()) {
-                                    Log.d("FCM", "Suscrito al topic 'eventos'");
-                                } else {
-                                    Log.e("FCM", "Error al suscribirse al topic 'eventos'", subTask.getException());
-                                }
-                            });*/
-
-
-                    // Navegar a MainActivity y terminar esta pantalla
                     startActivity(new Intent(this, MainActivity.class));
                     finish();
                 })
-
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error al guardar usuario", Toast.LENGTH_SHORT).show();
                     binding.progressVarReg.setVisibility(View.INVISIBLE);
                     binding.btnRegister.setEnabled(true);
                 });
     }
+
 }
 

@@ -18,7 +18,6 @@ import com.example.planpalmobile.R;
 import com.example.planpalmobile.databinding.FragmentPerfilBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import android.util.Log;
@@ -39,27 +38,24 @@ public class PerfilFragment extends Fragment {
         ImageView imagenPerfil = root.findViewById(R.id.imagenPerfil);
         Button btnCerrarSesion = root.findViewById(R.id.btnCerrarSesion);
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseUser user = mAuth.getCurrentUser();
 
-        if (user != null) {
-            String email = user.getEmail();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseUser userLoged = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (userLoged != null) {
+            String uid = userLoged.getUid();
 
             db.collection("usuarios")
-                    .whereEqualTo("email", email)
+                    .document(uid)
                     .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
-                            String correo = document.getString("email");
+                    .addOnSuccessListener(document -> {
+                        if (document.exists()) {
                             String descripcion = document.getString("opcInfo");
-                            String nombreUsuario = document.getString("id");
+                            String nombreUsuario = document.getString("name");
                             String urlFoto = document.getString("fotoPerfil");
 
-                            correoTextView.setText("Correo: " + correo);
-                            descripcionTextView.setText("Descripción: " + descripcion);
-                            nombreUsuarioTextView.setText(nombreUsuario);
+                            descripcionTextView.setText("Descripción: " + (descripcion != null ? descripcion : ""));
+                            nombreUsuarioTextView.setText(nombreUsuario != null ? nombreUsuario : "");
 
                             if (urlFoto != null && !urlFoto.isEmpty()) {
                                 Glide.with(this)
@@ -82,11 +78,6 @@ public class PerfilFragment extends Fragment {
                         imagenPerfil.setImageResource(R.drawable.imgperfil);
                         Log.e("NotificationsFragment", "Error al obtener datos de Firestore", e);
                     });
-
-        } else {
-            correoTextView.setText("Usuario no autenticado.");
-            descripcionTextView.setText("");
-            imagenPerfil.setImageResource(R.drawable.imgperfil);
         }
 
         btnCerrarSesion.setOnClickListener(v -> {
