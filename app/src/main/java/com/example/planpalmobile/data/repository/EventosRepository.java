@@ -3,7 +3,6 @@ package com.example.planpalmobile.data.repository;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 import android.util.Log;
 
 import com.example.planpalmobile.data.database.EventApiControler;
@@ -299,21 +298,6 @@ public class EventosRepository {
                 callback.accept(false);
             }
         });
-    }
-
-
-
-    /**
-     * @param dateString
-     * @return string ==> Date
-     */
-    public static Date mapDateFromString(String dateString) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.getDefault());
-            return sdf.parse(dateString);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 

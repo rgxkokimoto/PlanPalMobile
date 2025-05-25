@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -101,6 +100,7 @@ public class CalendarFragment extends Fragment {
     /*
      *  Este método se encarga de escuchar los clicks del usuario
      *  en el calendario y actualizar la UI con la fecha seleccionada
+     *  en el dia actual
      *  ademas esta relacionado con los métodos de filtrado por dia
      *  que cargan la lista de eventos en el recycler view.
      */

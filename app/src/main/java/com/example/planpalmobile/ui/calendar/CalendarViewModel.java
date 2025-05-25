@@ -46,7 +46,7 @@ public class CalendarViewModel extends ViewModel {
     }
 
      /*
-     *  BACK --> Devuelve lista de eventos por fecha
+     *  BACK --> Devuelve lista de eventos por fecha Para el Recycler View
      */
     public void loadEventosPorFecha(Calendar fecha) {
         repository.getEventsItemsByDate(fecha, eventosList::postValue);
