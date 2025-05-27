@@ -19,7 +19,7 @@
         android:theme="@style/Theme.PlanPalMobile"
         tools:targetApi="31">
         <activity
-            android:name=".ui.eventmanager.EventoDetalleActivity"
+            android:name=".ui.eventmanager.editevent.EventoDetalleActivity"
             android:exported="false" />
         <activity
             android:name=".RegisterActivity"

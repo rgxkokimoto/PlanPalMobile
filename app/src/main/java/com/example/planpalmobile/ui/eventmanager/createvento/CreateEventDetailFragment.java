@@ -1,4 +1,4 @@
-package com.example.planpalmobile.ui.eventmanager;
+package com.example.planpalmobile.ui.eventmanager.createvento;
 
 import static com.example.planpalmobile.R.*;
 
@@ -24,6 +24,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.planpalmobile.databinding.FragmentCreateEventDetailBinding;
+import com.example.planpalmobile.ui.eventmanager.DateAdapter;
+import com.example.planpalmobile.ui.eventmanager.EventManagerViewModel;
 import com.google.android.material.button.MaterialButton;
 
 import java.text.ParseException;
@@ -31,7 +33,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,20 +41,21 @@ public class CreateEventDetailFragment extends Fragment {
     private FragmentCreateEventDetailBinding binding;
     private final List<Date> dateList = new ArrayList<>();
     private DateAdapter adapter;
-    private String description = "";
-    private EventManagerViewModel eMviewModel;
+    private final String description = "";
+    private EventManagerViewModel eMvm;
+    private static final String DATE_FORMAT = "dd/MM/yyyy";
+    private static final String TIME_FORMAT = "HH:mm";
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentCreateEventDetailBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        eMviewModel = new ViewModelProvider(requireActivity()).get(EventManagerViewModel.class);
+        eMvm = new ViewModelProvider(requireActivity()).get(EventManagerViewModel.class);
 
-        // Pongo la fecha actual en el textview por si pudiera facilitar al ususario
         setCurrentDateTv();
 
-        binding.btnDescription.setOnClickListener(v -> { putNewDesc(); });
+        binding.btnDescription.setOnClickListener(v -> { eMvm.putNewDesc(requireContext()); });
 
         binding.btnPickDay.setOnClickListener(v -> { showDatePicker(binding.btnPickDay, binding.btnPickDayEn); });
         binding.btnPickTime.setOnClickListener(v -> { showTimePicker(binding.btnPickTime); });
@@ -62,7 +64,7 @@ public class CreateEventDetailFragment extends Fragment {
 
         binding.btnNewDate.setOnClickListener(v -> { createNewMeet(); });
 
-        binding.btnCrear.setOnClickListener(this::createdNewEvent);
+
 
         binding.btnCancelar.setOnClickListener(v -> {
 
@@ -78,6 +80,39 @@ public class CreateEventDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
+        eMvm.getEventCreationStatus().observe(getViewLifecycleOwner(), message -> {
+            switch (message) {
+                case ERROR_TITLE:
+                    Toast.makeText(requireContext(), "El título no puede estar vacío", Toast.LENGTH_SHORT).show();
+                    break;
+                case ERROR_DATE:
+                    Toast.makeText(requireContext(), "La fecha de inicio debe ser anterior a la fecha de fin", Toast.LENGTH_SHORT).show();
+                    binding.btnPickDay.setBackgroundColor(getResources().getColor(color.red_error_btn));
+                    binding.btnPickTime.setBackgroundColor(getResources().getColor(color.red_error_btn));
+                    break;
+                case ERROR_RESPONSE:
+                    Toast.makeText(requireContext(), "Error en la creación del evento", Toast.LENGTH_SHORT).show();
+                    break;
+                case ERROR_USER:
+                    Toast.makeText(requireContext(), "Error del registro del usuario en el evento", Toast.LENGTH_SHORT).show();
+                    break;
+                case ERROR_NETWORK:
+                    Toast.makeText(requireContext(), "Error al conectar con el servidor", Toast.LENGTH_SHORT).show();
+                    break;
+                case OK:
+                    Toast.makeText(requireContext(), "Evento creado correctamente", Toast.LENGTH_SHORT).show();
+                    binding.btnPickDay.setBackgroundColor(getResources().getColor(color.blank_background));
+                    binding.btnPickTime.setBackgroundColor(getResources().getColor(color.blank_background));
+                    Navigation.findNavController(view).popBackStack();
+                    break;
+            }
+
+            binding.btnCrear.setOnClickListener(this::createdNewEvent);
+
+
+        });
+
         adapter = new DateAdapter(dateList, new DateAdapter.OnDateActionListener() {
             @Override
             public void onDelete(Date date, int position) {
@@ -91,6 +126,8 @@ public class CreateEventDetailFragment extends Fragment {
             }
         });
 
+        binding.btnCrear.setOnClickListener(this::createdNewEvent);
+
         binding.rvDateEvent.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvDateEvent.setAdapter(adapter);
     }
@@ -98,105 +135,18 @@ public class CreateEventDetailFragment extends Fragment {
 
     private void createdNewEvent(View v) {
         String title = binding.etTitulo.getText().toString();
-        Date dateIn = StrMapDate(binding.btnPickDay, binding.btnPickTime);
-        Date dateEnd = StrMapDate(binding.btnPickDayEn, binding.btnPickTimeEnd);
-        Log.d("CreateEventDetailFragment", "DateIn: " + dateIn);
-        Log.d("CreateEventDetailFragment", "DateEnd: " + dateEnd);
-        String dscript = description;
+        Date dateIn = eMvm.parseDateTimeFromButtons(binding.btnPickDay, binding.btnPickTime);
+        Date dateEnd = eMvm.parseDateTimeFromButtons(binding.btnPickDayEn, binding.btnPickTimeEnd);
 
-        eMviewModel.validateNewEvent(
-                title,
-                dateIn,
-                dateEnd,
-                dscript,
-                dateList
-                );
+        eMvm.setTitle(title);
+        eMvm.setStartDate(dateIn);
+        eMvm.setEndDate(dateEnd);
+        // eMvm.addAvailableDate(dateIn); esto ya se guarda en el método putNewDesc en el ViewModel
+        eMvm.addAvailableDate(dateEnd);
 
-        eMviewModel.respNewEventIsOk().observe(getViewLifecycleOwner(), message -> {
-
-            switch (message) {
-                case "ERROR_TITLE":
-                    Toast.makeText(requireContext(), "El título no puede estar vacío", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case "ERROR_DATE":
-                    Toast.makeText(requireContext(), "La fecha de inicio debe ser anterior a la fecha de fin", Toast.LENGTH_SHORT).show();
-                    binding.btnPickDay.setBackgroundColor(getResources().getColor(color.red_error_btn));
-                    binding.btnPickTime.setBackgroundColor(getResources().getColor(color.red_error_btn));
-                    break;
-
-                case "ERROR_RESPONSE":
-                    Toast.makeText(requireContext(), "Error en la creación del evento", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case "ERROR_USER":
-                    Toast.makeText(requireContext(), "Error del registro del usuario en el evento", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case "ERROR_NETWORK":
-                    Toast.makeText(requireContext(), "Error al conectar con el servidor", Toast.LENGTH_SHORT).show();
-                    break;
-
-                case "OK":
-                    Toast.makeText(requireContext(), "Evento creado correctamente", Toast.LENGTH_SHORT).show();
-                    binding.btnPickDay.setBackgroundColor(getResources().getColor(color.blank_background));
-                    binding.btnPickTime.setBackgroundColor(getResources().getColor(color.blank_background));
-
-          /*          // 🚀 Enviar notificación a todos los usuarios suscritos al topic "eventos"
-                    FirebaseFunctions.getInstance()
-                            .getHttpsCallable("sendNewEventNotification")
-                            .call(new HashMap<String, Object>() {{
-                                put("title", "Nuevo evento disponible");
-                                put("body", "Se ha creado: " + title);  // Usa el título real del evento
-                            }})
-                            .addOnSuccessListener(result1 -> {
-                                Log.d("FCM", "Notificación enviada");
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("FCM", "Error enviando notificación", e);
-                            });
-*/
-                    Navigation.findNavController(v).popBackStack();
-
-                    break;
-            }
-
-
-        });
+        eMvm.validateNewEvent(); // Esto activa getEventCreationStatus() en el ViewModel
     }
 
-
-    private Date StrMapDate(MaterialButton btnPickDay, MaterialButton btnPickTime) {
-        String dateStr = btnPickDay.getText().toString();
-        String timeStr = btnPickTime.getText().toString(); // "23:46"
-
-        String combined = dateStr + " " + timeStr; // "17/05/2025 23:46"
-        SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
-        inputFormat.setLenient(false);
-
-        try {
-            return inputFormat.parse(combined);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-
-    private void putNewDesc() {
-        EditText input = new EditText(requireContext());
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-        input.setText(description);
-
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Introduce una descripción")
-                .setView(input)
-                .setPositiveButton("Guardar", (dialog, which) -> {
-                    description = input.getText().toString();
-                })
-                .setNegativeButton("Cancelar", null)
-                .show();
-    }
 
     private void createNewMeet() {
 
@@ -224,14 +174,14 @@ public class CreateEventDetailFragment extends Fragment {
                 Log.d("CreateEventDetailFragment", "NewDateMeet: " + newDate);
 
 
-                Date evetInitDate = StrMapDate(binding.btnPickDay, binding.btnPickTime);
-                Date eventEndEnd = StrMapDate(binding.btnPickDayEn, binding.btnPickTimeEnd);
+                Date evetInitDate = eMvm.parseDateTimeFromButtons(binding.btnPickDay, binding.btnPickTime);
+                Date eventEndEnd = eMvm.parseDateTimeFromButtons(binding.btnPickDayEn, binding.btnPickTimeEnd);
                 Log.d("CreateEventDetailFragment", "DateInMeet: " + evetInitDate);
                 Log.d("CreateEventDetailFragment", "DateEndMeet: " + eventEndEnd);
 
 
 
-                boolean isNewMeetValid = eMviewModel.validateNewMeet(newDate, dateList, evetInitDate, eventEndEnd);
+                boolean isNewMeetValid = eMvm.validateNewMeet(newDate, dateList, evetInitDate, eventEndEnd);
 
 
 
@@ -254,8 +204,8 @@ public class CreateEventDetailFragment extends Fragment {
 
     private void setCurrentDateTv() {
         Calendar now = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
+        SimpleDateFormat timeFormat = new SimpleDateFormat(TIME_FORMAT, Locale.getDefault());
 
         String currentDate = dateFormat.format(now.getTime());
         String currentTime = timeFormat.format(now.getTime());
@@ -264,8 +214,9 @@ public class CreateEventDetailFragment extends Fragment {
         binding.btnPickDayEn.setText(currentDate);
         binding.btnPickTime.setText(currentTime);
         binding.btnPickTimeEnd.setText(currentTime);
-
     }
+
+
 
     private void showDatePicker(Button button, @Nullable Button endBtn) {
         Calendar calendar = Calendar.getInstance();
@@ -287,6 +238,8 @@ public class CreateEventDetailFragment extends Fragment {
             }
 
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+        binding.btnPickDay.setBackgroundColor(getResources().getColor(color.blank_background));
+        binding.btnPickTime.setBackgroundColor(getResources().getColor(color.blank_background));
     }
 
     private void showTimePicker(Button targetBtn) {
@@ -298,6 +251,8 @@ public class CreateEventDetailFragment extends Fragment {
             targetBtn.setHint(formattedTime);
 
         }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true).show();
+        binding.btnPickDay.setBackgroundColor(getResources().getColor(color.blank_background));
+        binding.btnPickTime.setBackgroundColor(getResources().getColor(color.blank_background));
     }
 
 }

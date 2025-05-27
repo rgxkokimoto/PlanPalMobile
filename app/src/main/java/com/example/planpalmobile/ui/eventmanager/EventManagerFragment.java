@@ -1,7 +1,5 @@
 package com.example.planpalmobile.ui.eventmanager;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,10 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.planpalmobile.R;
 import com.example.planpalmobile.data.entities.Evento;
 import com.example.planpalmobile.databinding.FragmentEventManagerBinding;
+import com.example.planpalmobile.ui.eventmanager.editevent.EventoAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.planpalmobile.ui.eventmanager;
+package com.example.planpalmobile.ui.eventmanager.editevent;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -34,8 +34,6 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoView
         void onVerDetallesClick(Evento evento);
         void onEliminarClick(Evento evento);
     }
-
-
 
     private List<Evento> eventoList;
     private final OnEventoClickListener listener;
@@ -88,7 +86,6 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoView
         });
 
 
-        // holder.btnVerDetalles.setOnClickListener(v -> listener.onVerDetallesClick(evento));
         holder.btnEliminar.setOnClickListener(v -> {
             new AlertDialog.Builder(v.getContext())
                     .setTitle("Confirmar eliminación")
@@ -117,7 +114,7 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoView
             super(itemView);
             tvTitulo = itemView.findViewById(R.id.tvTituloEvento);
             tvFechas = itemView.findViewById(R.id.tvFechasEvento);
-            tvDescripcion = itemView.findViewById(R.id.tvDescripcion);
+            tvDescripcion = itemView.findViewById(R.id.tvDescription);
             btnVerDetalles = itemView.findViewById(R.id.btnVerDetalles);
             btnEliminar = itemView.findViewById(R.id.btnEliminar);
         }
