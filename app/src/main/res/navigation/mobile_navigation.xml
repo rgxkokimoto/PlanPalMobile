@@ -33,7 +33,7 @@
         tools:layout="@layout/fragment_perfil" />
     <fragment
         android:id="@+id/createEventDetailFragment"
-        android:name="com.example.planpalmobile.ui.eventmanager.CreateEventDetailFragment"
+        android:name="com.example.planpalmobile.ui.eventmanager.createvento.CreateEventDetailFragment"
         android:label="fragment_create_event_detail"
         tools:layout="@layout/fragment_create_event_detail" />
     <fragment

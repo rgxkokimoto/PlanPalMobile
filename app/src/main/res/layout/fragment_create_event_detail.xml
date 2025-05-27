@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.eventmanager.CreateEventDetailFragment"
+    tools:context=".ui.eventmanager.createvento.CreateEventDetailFragment"
     android:padding="16dp"
     android:background="@color/sec_blue"
     >
@@ -26,7 +26,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@id/tvselectDate"
+        android:id="@+id/tvselectDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -57,7 +57,7 @@
             android:padding="9dp"
             android:text="@string/inicio"
             android:textAlignment="textStart"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <com.google.android.material.button.MaterialButton
@@ -103,7 +103,7 @@
             android:padding="9dp"
             android:text="@string/fin"
             android:textAlignment="textStart"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <com.google.android.material.button.MaterialButton

@@ -84,12 +84,12 @@
             android:padding="16dp">
 
             <TextView
-                android:padding="15dp"
                 android:id="@+id/tvDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="3"
                 android:ellipsize="end"
+                android:maxLines="3"
+                android:padding="15dp"
                 android:text="@string/aqu_va_una_descripci_n_muy_larga_que_podr_a_ocupar_muchas_l_neas_si_no_se_controla_correctamente_este_texto_debe_poder_expandirse_y_comprimirse"
                 android:textSize="16sp" />
 
@@ -97,10 +97,10 @@
                 android:id="@+id/tvToggleDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="8dp"
                 android:text="@string/ver_m_s"
                 android:textColor="@color/mainBlue"
-                android:textStyle="bold"
-                android:paddingTop="8dp" />
+                android:textStyle="bold" />
 
         </LinearLayout>
 
