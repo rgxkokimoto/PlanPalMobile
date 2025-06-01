@@ -1,40 +1,63 @@
 package com.example.planpalmobile.ui.eventmanager.editevent;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
+import android.text.InputType;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+
+import com.example.planpalmobile.R;
 import com.example.planpalmobile.databinding.ActivityEventoDetalleBinding;
+import com.example.planpalmobile.ui.eventmanager.comon.EventManagerViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
-public class EventoDetalleActivity extends AppCompatActivity {
+public class EventoDetalleActivity extends Fragment {
 
     private ActivityEventoDetalleBinding binding;
     private final SimpleDateFormat sdfFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
     private final SimpleDateFormat sdfHora = new SimpleDateFormat("HH:mm", Locale.getDefault());
+    private EventManagerViewModel eMvm;
+    private String eventoId;
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater name, ViewGroup container,
+                             Bundle savedInstanceState) {
         binding = ActivityEventoDetalleBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        View root = binding.getRoot();
+        eMvm = new ViewModelProvider(requireActivity()).get(EventManagerViewModel.class);
 
         setData();
 
-        binding.btnVolver.setOnClickListener(v -> finish());
+        binding.btnVolver.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
 
         binding.btnCodigo.setOnClickListener(v -> {
-            // TODO Lógica para editar el código
+            setNewTitle();
         });
 
         binding.btnEditarDescripcion.setOnClickListener(v -> {
-            // TODO Lógica para editar la descripción
+            eMvm.putNewDesc(requireContext(), newDesc -> {
+                binding.tvDescription.setText(newDesc);
+                Log.d("Descripción", newDesc);
+            });
         });
 
         binding.btnPickDay.setOnClickListener(v -> {
-            // TODO Lógica para editar la fecha
+            eMvm.showDatePicker(requireContext(), binding.btnPickDay, binding.btnPickDayEn);
+            blanckButtons(R.color.blank_background);
         });
 
         binding.btnPickTime.setOnClickListener(v -> {
@@ -50,23 +73,68 @@ public class EventoDetalleActivity extends AppCompatActivity {
         });
 
         binding.tvToggleDesc.setOnClickListener(v -> toggleDescripcion());
+
+
+        return root;
+    }
+
+    private void setNewTitle() {
+        EditText input = new EditText(requireContext());
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setText(binding.btnCodigo.getText());
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Introduce una descripción")
+                .setView(input)
+                .setPositiveButton("Guardar", (dialog, which) -> {
+
+
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("codigo", input.getText().toString());
+                    saveNewFieldResponse(data);
+
+                })
+                .setNegativeButton("Cancelar", null)
+                .show();
+    }
+
+    private void saveNewFieldResponse(Map<String, Object> data) {
+
+        eMvm.updateFieldEvent(eventoId, data, resp -> {
+
+        });
+
     }
 
     private void setData() {
-        String codigo = getIntent().getStringExtra("codigo");
-        String descripcion = getIntent().getStringExtra("descripcion");
-        long inicioMillis = getIntent().getLongExtra("horaInicio", 0);
-        long finMillis = getIntent().getLongExtra("horaFin", 0);
-        Date inicio = new Date(inicioMillis);
-        Date fin = new Date(finMillis);
+        Bundle args = getArguments();
+        if (args != null) {
+            String codigo = args.getString("codigo");
+            String descripcion = args.getString("descripcion");
+            long inicioMillis = args.getLong("horaInicio", 0);
+            long finMillis = args.getLong("horaFin", 0);
+            Date inicio = new Date(inicioMillis);
+            Date fin = new Date(finMillis);
+            String etiqueta = args.getString("etiqueta");
+            eventoId = args.getString("eventoId");
+            Log.d("EventoId", eventoId);
 
-        binding.btnCodigo.setText((codigo != null ? codigo : "Sin título"));
-        binding.tvDescription.setText((descripcion != null ? descripcion : "Sin descripción"));
-        binding.btnPickDay.setText(sdfFecha.format(inicio));
-        binding.btnPickTime.setText(sdfHora.format(inicio));
-        binding.btnPickDayEn.setText(sdfFecha.format(fin));
-        binding.btnPickTimeEnd.setText(sdfHora.format(fin));
+            eMvm.setEtiquetas(etiqueta);
+            eMvm.setTitle(codigo);
+            eMvm.setStartDate(inicio);
+            eMvm.setEndDate(fin);
+            eMvm.setDescription(descripcion);
+
+            binding.btnCategoria.setText(etiqueta);
+            binding.btnCodigo.setText((codigo != null ? codigo : "Sin título"));
+            binding.btnPickDay.setText(sdfFecha.format(inicio));
+            binding.btnPickTime.setText(sdfHora.format(inicio));
+            binding.btnPickDayEn.setText(sdfFecha.format(fin));
+            binding.btnPickTimeEnd.setText(sdfHora.format(fin));
+            binding.tvDescription.setText((descripcion != null ? descripcion : "Sin descripción"));
+            // TODO Lógica para cargar horas disponibles
+        }
     }
+
 
     private void toggleDescripcion() {
         int maxLines = binding.tvDescription.getMaxLines();
@@ -78,4 +146,17 @@ public class EventoDetalleActivity extends AppCompatActivity {
             binding.tvToggleDesc.setText("Ver más");
         }
     }
+
+    private void blanckButtons(int blank_background) {
+        binding.btnPickDay.setBackgroundColor(getResources().getColor(blank_background));
+        binding.btnPickTime.setBackgroundColor(getResources().getColor(blank_background));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+        eMvm.clearMutableData();
+    }
+
 }

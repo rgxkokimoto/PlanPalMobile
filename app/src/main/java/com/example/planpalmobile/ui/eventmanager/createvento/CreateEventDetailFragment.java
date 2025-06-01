@@ -20,7 +20,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.planpalmobile.databinding.FragmentCreateEventDetailBinding;
-import com.example.planpalmobile.ui.eventmanager.EventManagerViewModel;
+import com.example.planpalmobile.ui.eventmanager.comon.EventManagerViewModel;
+
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.chip.Chip;
 
@@ -54,12 +55,32 @@ public class CreateEventDetailFragment extends Fragment {
 
         setCurrentDateTv();
 
-        binding.btnDescription.setOnClickListener(v -> { eMvm.putNewDesc(requireContext()); });
+        binding.btnDescription.setOnClickListener(v -> {
+            eMvm.putNewDesc(requireContext(), newDesc -> {
+                // TODO
+                Log.d("Descripción", newDesc);
+            });
+        });
 
-        binding.btnPickDay.setOnClickListener(v -> { showDatePicker(binding.btnPickDay, binding.btnPickDayEn); });
-        binding.btnPickTime.setOnClickListener(v -> { showTimePicker(binding.btnPickTime); });
-        binding.btnPickDayEn.setOnClickListener(v -> { showDatePicker(binding.btnPickDayEn, null); });
-        binding.btnPickTimeEnd.setOnClickListener(v -> { showTimePicker(binding.btnPickTimeEnd); });
+        binding.btnPickDay.setOnClickListener(v -> {
+            eMvm.showDatePicker(requireContext(), binding.btnPickDay, binding.btnPickDayEn);
+            blanckButtons(color.blank_background);
+        });
+
+        binding.btnPickTime.setOnClickListener(v -> {
+            eMvm.showTimePicker(requireContext(), binding.btnPickTime);
+            blanckButtons(color.blank_background);
+        });
+
+        binding.btnPickDayEn.setOnClickListener(v -> {
+            eMvm.showDatePicker(requireContext(), binding.btnPickDayEn, null);
+            blanckButtons(color.blank_background);
+        });
+
+        binding.btnPickTimeEnd.setOnClickListener(v -> {
+            eMvm.showTimePicker(requireContext(), binding.btnPickTimeEnd);
+            blanckButtons(color.blank_background);
+        });
 
         binding.btnNewDate.setOnClickListener(v -> { createNewMeet(); });
 
@@ -82,6 +103,11 @@ public class CreateEventDetailFragment extends Fragment {
         return root;
     }
 
+    private void blanckButtons(int blank_background) {
+        binding.btnPickDay.setBackgroundColor(getResources().getColor(blank_background));
+        binding.btnPickTime.setBackgroundColor(getResources().getColor(blank_background));
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -95,8 +121,7 @@ public class CreateEventDetailFragment extends Fragment {
                     break;
                 case ERROR_DATE:
                     Toast.makeText(requireContext(), "La fecha de inicio debe ser anterior a la fecha de fin", Toast.LENGTH_SHORT).show();
-                    binding.btnPickDay.setBackgroundColor(getResources().getColor(color.red_error_btn));
-                    binding.btnPickTime.setBackgroundColor(getResources().getColor(color.red_error_btn));
+                    blanckButtons(color.red_error_btn);
                     break;
                 case ERROR_RESPONSE:
                     Toast.makeText(requireContext(), "Error en la creación del evento", Toast.LENGTH_SHORT).show();
@@ -206,8 +231,6 @@ public class CreateEventDetailFragment extends Fragment {
         }
     }
 
-
-
     private void setCurrentDateTv() {
         Calendar now = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
@@ -223,7 +246,7 @@ public class CreateEventDetailFragment extends Fragment {
     }
 
 
-
+    // TODO DEPRECAR
     private void showDatePicker(Button button, @Nullable Button endBtn) {
         Calendar calendar = Calendar.getInstance();
 
@@ -248,6 +271,7 @@ public class CreateEventDetailFragment extends Fragment {
         binding.btnPickTime.setBackgroundColor(getResources().getColor(color.blank_background));
     }
 
+    // TODO DEPRECAR
     private void showTimePicker(Button targetBtn) {
         Calendar now = Calendar.getInstance();
 
@@ -260,7 +284,5 @@ public class CreateEventDetailFragment extends Fragment {
         binding.btnPickDay.setBackgroundColor(getResources().getColor(color.blank_background));
         binding.btnPickTime.setBackgroundColor(getResources().getColor(color.blank_background));
     }
-
-
 
 }

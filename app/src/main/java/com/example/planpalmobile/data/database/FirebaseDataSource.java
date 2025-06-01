@@ -136,6 +136,7 @@ public class FirebaseDataSource {
                         data.put("horaFin", doc.getTimestamp("horaFin"));
                         data.put("fechasDisponibles", doc.get("fechasDisponibles"));
                         data.put("citasReservadas", doc.get("citasReservadas"));
+                        data.put("etiqueta", doc.getString("etiqueta"));
                         resultado.add(data);
                     }
                     callback.accept(resultado);

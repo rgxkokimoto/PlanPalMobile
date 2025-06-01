@@ -1,7 +1,8 @@
 package com.example.planpalmobile.ui.eventmanager.editevent;
 
 import android.app.AlertDialog;
-import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,17 +10,27 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.planpalmobile.R;
+import com.example.planpalmobile.data.database.FirebaseDataSource;
 import com.example.planpalmobile.data.entities.Evento;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoViewHolder> {
+
+    FirebaseDataSource fr = new FirebaseDataSource();
 
     public void removeEvento(Evento evento) {
         int position = eventoList.indexOf(evento);
@@ -72,19 +83,23 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoView
             holder.tvFechas.setText("Fecha no disponible");
         }
 
+        // Obtener ID del evento en Firestore antes de navegar
         holder.btnVerDetalles.setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), EventoDetalleActivity.class);
-            intent.putExtra("codigo", evento.getCodigo());
-            intent.putExtra("descripcion", evento.getDescripcion());
-            if (evento.getHoraInicio() != null) {
-                intent.putExtra("horaInicio", evento.getHoraInicio().getTime());
-            }
-            if (evento.getHoraFin() != null) {
-                intent.putExtra("horaFin", evento.getHoraFin().getTime());
-            }
-            v.getContext().startActivity(intent);
-        });
+                Bundle bundle = new Bundle();
+                bundle.putString("codigo", evento.getCodigo());
+                bundle.putString("descripcion", evento.getDescripcion());
+                if (evento.getHoraInicio() != null) {
+                    bundle.putLong("horaInicio", evento.getHoraInicio().getTime());
+                }
+                if (evento.getHoraFin() != null) {
+                    bundle.putLong("horaFin", evento.getHoraFin().getTime());
+                }
+                bundle.putString("etiqueta", evento.getEtiqueta());
 
+
+                Navigation.findNavController(v).navigate(
+                        R.id.action_navigation_event_manager_to_eventoDetalleActivity, bundle);
+            });
 
         holder.btnEliminar.setOnClickListener(v -> {
             new AlertDialog.Builder(v.getContext())

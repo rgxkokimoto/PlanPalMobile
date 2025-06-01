@@ -1,15 +1,20 @@
-package com.example.planpalmobile.ui.eventmanager;
+package com.example.planpalmobile.ui.eventmanager.comon;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.text.InputType;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.planpalmobile.R;
 import com.example.planpalmobile.data.entities.Evento;
 import com.example.planpalmobile.data.repository.EventosRepository;
 import com.example.planpalmobile.databinding.FragmentCreateEventDetailBinding;
@@ -18,9 +23,12 @@ import com.google.android.material.button.MaterialButton;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class EventManagerViewModel extends ViewModel {
 
@@ -144,21 +152,42 @@ public class EventManagerViewModel extends ViewModel {
         });
     }
 
+    // TODO solucionar prblema del id
+    public void updateFieldEvent(String codEvnent, Map<String, Object> updField, Consumer<String> onUpdate) {
+        repository.actualizarEvento(codEvnent, updField, success -> {
+            if (success) {
+                onUpdate.accept("OK");
+            } else {
+                onUpdate.accept("ERROR");
+            }
+        });
+    }
+
+    public void clearMutableData() {
+        title.setValue(null);
+        startDate.setValue(null);
+        endDate.setValue(null);
+        description.setValue(null);
+        availableDates.setValue(new ArrayList<>());
+    }
 
     // METODOS PARA LA VISTA
-
-    public void putNewDesc(Context usedFragment) {
+    public void putNewDesc(Context usedFragment, Consumer<String> onDescSaved) {
         EditText input = new EditText(usedFragment);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setText(description.getValue());
         new AlertDialog.Builder(usedFragment)
                 .setTitle("Introduce una descripción")
                 .setView(input)
                 .setPositiveButton("Guardar", (dialog, which) -> {
-                    description.setValue(input.getText().toString());
+                    String newDesc = input.getText().toString();
+                    description.setValue(newDesc);
+                    onDescSaved.accept(newDesc);
                 })
                 .setNegativeButton("Cancelar", null)
                 .show();
     }
+
 
     public void putNewCategory(Context context, FragmentCreateEventDetailBinding binding) {
         String[] etiquetasOpciones = {"profesional", "ocio", "personal", "académico"};
@@ -182,6 +211,42 @@ public class EventManagerViewModel extends ViewModel {
                 .setNegativeButton("Cancelar", null)
                 .show();
 
+    }
+
+    // TODO REFACTORIZAR LOS MÉTODOS PARA ESCOGER LAS FECHAS
+
+    public void showDatePicker(Context context ,Button button, @Nullable Button endBtn) {
+        Calendar calendar = Calendar.getInstance();
+
+        new DatePickerDialog(context, (view, year, month, dayOfMonth) -> {
+            Calendar selectedDate = Calendar.getInstance();
+            selectedDate.set(year, month, dayOfMonth);
+
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+            String formatDate = sdf.format(selectedDate.getTime());
+
+            button.setText(formatDate);
+            button.setHint(formatDate);
+
+            if (endBtn != null) {
+                endBtn.setText(formatDate);
+                endBtn.setHint(formatDate);
+            }
+
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+
+    }
+
+    public void showTimePicker(Context context ,Button targetBtn) {
+        Calendar now = Calendar.getInstance();
+
+        new TimePickerDialog(context, (view, hourOfDay, minute) -> {
+            String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
+            targetBtn.setText(formattedTime);
+            targetBtn.setHint(formattedTime);
+
+        }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true).show();
     }
 
 

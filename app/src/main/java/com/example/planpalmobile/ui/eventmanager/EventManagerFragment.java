@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.planpalmobile.R;
 import com.example.planpalmobile.data.entities.Evento;
 import com.example.planpalmobile.databinding.FragmentEventManagerBinding;
+import com.example.planpalmobile.ui.eventmanager.comon.EventManagerViewModel;
 import com.example.planpalmobile.ui.eventmanager.editevent.EventoAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
