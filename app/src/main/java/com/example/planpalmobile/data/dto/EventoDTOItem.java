@@ -10,11 +10,13 @@ public class EventoDTOItem {
     public String id;
     public String codigo;
     public Date horaInicio;
+    public String etiqueta;
 
-    public EventoDTOItem(String codigo, Date horaInicio, String id) {
+    public EventoDTOItem(String codigo, Date horaInicio, String id, String etiqueta) {
         this.codigo = codigo;
         this.id = id;
         this.horaInicio = horaInicio;
+        this.etiqueta = etiqueta;
     }
 
     public String getId() {
@@ -27,5 +29,9 @@ public class EventoDTOItem {
 
     public Date getHoraInicio() {
         return horaInicio;
+    }
+
+    public String getEtiqueta() {
+        return etiqueta;
     }
 }

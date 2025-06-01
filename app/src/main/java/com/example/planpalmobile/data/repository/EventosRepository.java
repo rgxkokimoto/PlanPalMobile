@@ -51,11 +51,11 @@ public class EventosRepository {
             for (Map<String, Object> map : listaMapas) {
                 String id = (String) map.get("id");
                 String codigo = (String) map.get("codigo");
-
+                String etiqueta = (String) map.get("etiqueta");
                 Timestamp timestamp = (Timestamp) map.get("horaInicio");
                 Date horaInicio = timestamp.toDate();
 
-                lista.add(new EventoDTOItem(codigo, horaInicio, id));
+                lista.add(new EventoDTOItem(codigo, horaInicio, id, etiqueta));
             }
             callback.accept(lista);
         });
@@ -82,6 +82,7 @@ public class EventosRepository {
 
                         Evento eventoMapeado = new Evento();
                         eventoMapeado.setCodigo(evento.getCodigo());
+                        eventoMapeado.setEtiqueta(evento.getEtiqueta());
                         eventoMapeado.setDescripcion(evento.getDescripcion());
                         eventoMapeado.setCreadorId(evento.getCreadorId());
                         eventoMapeado.setHoraInicio(evento.getHoraInicio());
@@ -139,11 +140,11 @@ public class EventosRepository {
             for (Map<String, Object> map : listaMapas) {
                 String id = (String) map.get("id");
                 String codigo = (String) map.get("codigo");
-
+                String etiqueta = (String) map.get("etiqueta");
                 Timestamp timestamp = (Timestamp) map.get("horaInicio");
                 Date horaInicio = timestamp.toDate();
 
-                listEventDays.add(new EventoDTOItem(codigo, horaInicio, id));
+                listEventDays.add(new EventoDTOItem(codigo, horaInicio, id, etiqueta));
             }
 
             callback.accept(listEventDays);
@@ -158,7 +159,7 @@ public class EventosRepository {
                 try {
                     String codigo = (String) map.get("codigo");
                     String descripcion = (String) map.get("descripcion");
-
+                    String etiqueta = (String) map.get("etiqueta");
                     Timestamp tsInicio = (Timestamp) map.get("horaInicio");
                     Timestamp tsFin = (Timestamp) map.get("horaFin");
 
@@ -201,7 +202,8 @@ public class EventosRepository {
                             horaFin,
                             fechasDisponibles,
                             citasReservadas,
-                            creadorId
+                            creadorId,
+                            etiqueta
                     );
 
                     eventosDelUsuario.add(evento);
@@ -226,7 +228,7 @@ public class EventosRepository {
      *  User --> Petición Crear Evento --> Api
      *  User <-- Respuesta Crear Evento <-- Api
      */
-    public void createNewEvent(String codigo, Date dateIn, Date dateEnd, String dscript, List<Date> horasDisponibles, Consumer<String> callback) {
+    public void createNewEvent(String codigo, Date dateIn, Date dateEnd, String dscript, List<Date> horasDisponibles, String etiqueta ,Consumer<String> callback) {
 
         FirebaseUser userLoged = FirebaseAuth.getInstance().getCurrentUser();
         if (userLoged == null) {
@@ -251,7 +253,8 @@ public class EventosRepository {
                 dateEnd,
                 horasDisponibles,
                 citasReservadas,
-                creadorId
+                creadorId,
+                etiqueta
         );
 
         Gson gson = new Gson();

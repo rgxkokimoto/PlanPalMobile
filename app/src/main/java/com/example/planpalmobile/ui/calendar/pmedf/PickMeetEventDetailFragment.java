@@ -91,9 +91,10 @@ public class PickMeetEventDetailFragment extends Fragment {
             return;
         }
 
-        mostrarTitulo(evento);
+        binding.tvTitlepPMED.setText(evento.getCodigo());
+        binding.btnCategoria.setText(evento.getEtiqueta());
         mostrarFechas(evento);
-        mostrarDescripcion(evento);
+        binding.tvDescription.setText(evento.getDescripcion());
         configurarToggleDescripcion();
         mostrarReservas(evento);
     }
@@ -102,20 +103,12 @@ public class PickMeetEventDetailFragment extends Fragment {
         Toast.makeText(requireContext(), "Error cargando evento", Toast.LENGTH_SHORT).show();
     }
 
-    private void mostrarTitulo(Evento evento) {
-        binding.tvTitlepPMED.setText(evento.getCodigo());
-    }
-
     private void mostrarFechas(Evento evento) {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,EEE HH:mm", Locale.getDefault());
         String fechaInicio = sdf.format(evento.getHoraInicio());
         String fechaFin = sdf.format(evento.getHoraFin());
         String fechaFormateada = fechaInicio + " to " + fechaFin;
         binding.tvDateEvent.setText(fechaFormateada);
-    }
-
-    private void mostrarDescripcion(Evento evento) {
-        binding.tvDescription.setText(evento.getDescripcion());
     }
 
     private void configurarToggleDescripcion() {

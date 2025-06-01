@@ -13,16 +13,25 @@
         android:id="@+id/tvTitlepPMED"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/event_title"
-        android:textStyle="bold"
-        android:textSize="25sp"
-        android:textColor="@color/white"
-        app:drawableEndCompat="@drawable/icons8_sol_48"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:padding="8dp"
         android:gravity="center"
-        />
+        android:padding="8dp"
+        android:text="@string/event_title"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:drawableStartCompat="@drawable/icons8_sol_48"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnCategoria" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCategoria"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#BABABA"
+        android:text="@string/personal"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvTitleDate"

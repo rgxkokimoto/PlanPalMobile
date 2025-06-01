@@ -51,6 +51,14 @@ public class ItemEventRecyclerAdapter
             String dateFormat = sdf.format(hiContext);
             holder.binding.tvDateEvent.setText(dateFormat);
 
+            holder.binding.tvEstateEvent.setText(event.getEtiqueta());
+            Log.d("ItemEventRecyclerAdapter", "Etiqueta: " + event.getEtiqueta());
+            if (event.getEtiqueta() != null) {
+                String etiquetaSelected = event.getEtiqueta();
+                setCardColor(holder, etiquetaSelected);
+            }
+
+
             holder.itemView.setOnClickListener(v -> {
                 Bundle bundle = new Bundle();
                 bundle.putString("codigo_evento", event.getId());
@@ -62,6 +70,28 @@ public class ItemEventRecyclerAdapter
             });
 
         }
+    }
+
+    // "profesional", "ocio", "personal", "académico", "otro"
+    private void setCardColor(ViewHolder holder, String etiquetaSelected) {
+
+        switch (etiquetaSelected) {
+            case "profesional":
+                holder.binding.cardEtc.setCardBackgroundColor(holder.itemView.getResources().getColor(R.color.mainBlue));
+                break;
+            case "ocio":
+                holder.binding.cardEtc.setBackgroundColor(holder.itemView.getResources().getColor(R.color.teal_200));
+                break;
+            case "personal":
+                holder.binding.cardEtc.setBackgroundColor(holder.itemView.getResources().getColor(R.color.purple_200));
+                break;
+            case "académico":
+                holder.binding.cardEtc.setCardBackgroundColor(holder.itemView.getResources().getColor(R.color.bar_color));
+
+            default:
+                Log.e("ItemEventRecyclerAdapter", "Etiqueta no reconocida: " + etiquetaSelected);
+        }
+
     }
 
     @Override

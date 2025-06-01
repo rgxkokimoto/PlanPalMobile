@@ -43,10 +43,8 @@ public class FirebaseDataSource {
                         data.put("id", doc.getId());
                         data.put("codigo", doc.getString("codigo"));
                         data.put("horaInicio", doc.getTimestamp("horaInicio"));
-                        data.put("creadorId", doc.getString("creadorId")); // <-- AÑADIR ESTO
-                        // Puedes añadir más campos si los necesitas:
-                        // data.put("descripcion", doc.getString("descripcion"));
-                        // data.put("horaFin", doc.getTimestamp("horaFin"));
+                        data.put("creadorId", doc.getString("creadorId"));
+                        data.put("etiqueta", doc.getString("etiqueta"));
                         resultado.add(data);
                     }
                     callback.accept(resultado);
@@ -111,6 +109,7 @@ public class FirebaseDataSource {
                         Map<String, Object> data = new HashMap<>();
                         data.put("id", doc.getId());
                         data.put("codigo", doc.getString("codigo"));
+                        data.put("etiqueta", doc.getString("etiqueta"));
                         data.put("horaInicio", doc.getTimestamp("horaInicio"));
                         resultado.add(data);
                     }

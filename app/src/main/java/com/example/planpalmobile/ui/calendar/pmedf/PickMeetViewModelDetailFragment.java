@@ -41,6 +41,9 @@ public class PickMeetViewModelDetailFragment  extends ViewModel {
     private final MutableLiveData<List<Map<Date, String>>> reservasMutable = new MutableLiveData<>();
     public LiveData<List<Map<Date, String>>> reservas = reservasMutable;
 
+    private final MutableLiveData<String> etiquetaMutable = new MutableLiveData<>();
+    public LiveData<String> etiqueta = etiquetaMutable;
+
     private final MutableLiveData<Evento> eventoMutable = new MutableLiveData<>();
     public LiveData<Evento> evento = eventoMutable;
 
@@ -50,6 +53,8 @@ public class PickMeetViewModelDetailFragment  extends ViewModel {
                 eventoMutable.postValue(eventoRecibido);
 
                 tituloMutable.postValue(eventoRecibido.getCodigo());  // Asumo que el título es código, corrige si es otro campo
+
+                etiquetaMutable.postValue(eventoRecibido.getEtiqueta());
 
                 descripcionMutable.postValue(eventoRecibido.getDescripcion());
 
@@ -74,6 +79,7 @@ public class PickMeetViewModelDetailFragment  extends ViewModel {
             } else {
                 eventoMutable.postValue(null);
                 tituloMutable.postValue("");
+                etiquetaMutable.postValue("");
                 descripcionMutable.postValue("");
                 fechaFormateadaMutable.postValue("");
                 reservasMutable.postValue(Collections.emptyList());

@@ -15,6 +15,7 @@ public class Evento {
     private List<Date> horasDisponibles;
     private Map<Date, String> citasReservadas;
     private String creadorId;
+    private String etiqueta;
 
     public Evento() {}
 
@@ -25,7 +26,9 @@ public class Evento {
         this.horaInicio = horaInicio;
     }
 
-    public Evento(String codigo, String descripcion, Date horaInicio, Date horaFin, List<Date> horasDisponibles, Map<Date, String> citasReservadas, String creadorId) {
+    public Evento(String codigo, String descripcion, Date horaInicio, Date horaFin, List<Date> horasDisponibles, Map<Date, String> citasReservadas, String creadorId
+        , String etiqueta
+    ) {
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.horaInicio = horaInicio;
@@ -33,6 +36,7 @@ public class Evento {
         this.horasDisponibles = horasDisponibles;
         this.citasReservadas = citasReservadas;
         this.creadorId = creadorId;
+        this.etiqueta = etiqueta;
     }
 
     public String getCodigo() {
@@ -87,5 +91,13 @@ public class Evento {
 
     public void setCreadorId(String creadorId) {
         this.creadorId = creadorId;
+    }
+
+    public String getEtiqueta() {
+        return etiqueta;
+    }
+
+    public void setEtiqueta(String etiqueta) {
+        this.etiqueta = etiqueta;
     }
 }
