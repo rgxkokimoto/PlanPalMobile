@@ -4,7 +4,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.calendar.ItemEventFragment"
     android:layout_gravity="center_horizontal"
     >
 
@@ -47,13 +46,13 @@
                 app:layout_constraintTop_toBottomOf="@+id/tvNameEvent" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardEtc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="35dp"
-                android:backgroundTint="@color/bar_color"
                 app:cardCornerRadius="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                >
 
                 <TextView
                     android:id="@+id/tvEstateEvent"

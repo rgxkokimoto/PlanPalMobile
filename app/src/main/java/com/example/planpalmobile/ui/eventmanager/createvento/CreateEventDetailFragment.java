@@ -2,7 +2,6 @@ package com.example.planpalmobile.ui.eventmanager.createvento;
 
 import static com.example.planpalmobile.R.*;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -12,21 +11,18 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.planpalmobile.databinding.FragmentCreateEventDetailBinding;
-import com.example.planpalmobile.ui.eventmanager.DateAdapter;
 import com.example.planpalmobile.ui.eventmanager.EventManagerViewModel;
-import com.google.android.material.button.MaterialButton;
+import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.material.chip.Chip;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,11 +36,13 @@ public class CreateEventDetailFragment extends Fragment {
 
     private FragmentCreateEventDetailBinding binding;
     private final List<Date> dateList = new ArrayList<>();
-    private DateAdapter adapter;
+    private FlexboxLayout flexboxLayout;
     private final String description = "";
     private EventManagerViewModel eMvm;
     private static final String DATE_FORMAT = "dd/MM/yyyy";
     private static final String TIME_FORMAT = "HH:mm";
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -52,6 +50,7 @@ public class CreateEventDetailFragment extends Fragment {
         binding = FragmentCreateEventDetailBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         eMvm = new ViewModelProvider(requireActivity()).get(EventManagerViewModel.class);
+        flexboxLayout = binding.flexboxChips;
 
         setCurrentDateTv();
 
@@ -64,13 +63,20 @@ public class CreateEventDetailFragment extends Fragment {
 
         binding.btnNewDate.setOnClickListener(v -> { createNewMeet(); });
 
+        binding.btnCategoria.setOnClickListener(v -> {
+            eMvm.putNewCategory(requireContext(), binding);
 
+        });
 
         binding.btnCancelar.setOnClickListener(v -> {
 
             // TODO enseñar un dialog si la lista de fechas no esta vacia
             Navigation.findNavController(v).popBackStack();
 
+        });
+
+        binding.goBackCreate.setOnClickListener(v -> {
+            Navigation.findNavController(v).popBackStack();
         });
 
         return root;
@@ -82,6 +88,7 @@ public class CreateEventDetailFragment extends Fragment {
 
 
         eMvm.getEventCreationStatus().observe(getViewLifecycleOwner(), message -> {
+            Log.d("CreateEventDetailFragment", "onViewCreated: " + message);
             switch (message) {
                 case ERROR_TITLE:
                     Toast.makeText(requireContext(), "El título no puede estar vacío", Toast.LENGTH_SHORT).show();
@@ -102,9 +109,8 @@ public class CreateEventDetailFragment extends Fragment {
                     break;
                 case OK:
                     Toast.makeText(requireContext(), "Evento creado correctamente", Toast.LENGTH_SHORT).show();
-                    binding.btnPickDay.setBackgroundColor(getResources().getColor(color.blank_background));
-                    binding.btnPickTime.setBackgroundColor(getResources().getColor(color.blank_background));
-                    Navigation.findNavController(view).popBackStack();
+                    eMvm.setNewEventState();
+                    Navigation.findNavController(requireView()).popBackStack();
                     break;
             }
 
@@ -113,23 +119,9 @@ public class CreateEventDetailFragment extends Fragment {
 
         });
 
-        adapter = new DateAdapter(dateList, new DateAdapter.OnDateActionListener() {
-            @Override
-            public void onDelete(Date date, int position) {
-                if (position >= 0 && position < dateList.size()) {
-                    dateList.remove(position);
-                    adapter.notifyItemRemoved(position);
-                } else {
-                    Log.w("DeleteError", "Intento de borrar índice fuera de rango: " + position);
-                }
-                adapter.notifyItemRemoved(position);
-            }
-        });
 
         binding.btnCrear.setOnClickListener(this::createdNewEvent);
 
-        binding.rvDateEvent.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.rvDateEvent.setAdapter(adapter);
     }
 
 
@@ -142,7 +134,7 @@ public class CreateEventDetailFragment extends Fragment {
         eMvm.setStartDate(dateIn);
         eMvm.setEndDate(dateEnd);
         // eMvm.addAvailableDate(dateIn); esto ya se guarda en el método putNewDesc en el ViewModel
-        eMvm.addAvailableDate(dateEnd);
+        eMvm.setAvailableDates(dateList);
 
         eMvm.validateNewEvent(); // Esto activa getEventCreationStatus() en el ViewModel
     }
@@ -173,17 +165,12 @@ public class CreateEventDetailFragment extends Fragment {
                 Date newDate = calendar.getTime();
                 Log.d("CreateEventDetailFragment", "NewDateMeet: " + newDate);
 
-
                 Date evetInitDate = eMvm.parseDateTimeFromButtons(binding.btnPickDay, binding.btnPickTime);
                 Date eventEndEnd = eMvm.parseDateTimeFromButtons(binding.btnPickDayEn, binding.btnPickTimeEnd);
                 Log.d("CreateEventDetailFragment", "DateInMeet: " + evetInitDate);
                 Log.d("CreateEventDetailFragment", "DateEndMeet: " + eventEndEnd);
 
-
-
                 boolean isNewMeetValid = eMvm.validateNewMeet(newDate, dateList, evetInitDate, eventEndEnd);
-
-
 
                 if (!isNewMeetValid) {
                     Toast.makeText(requireContext(), "Fecha invalida, fuera del evento oh repetida", Toast.LENGTH_SHORT).show();
@@ -191,8 +178,8 @@ public class CreateEventDetailFragment extends Fragment {
                 }
 
                 dateList.add(newDate);
-                adapter.updateList(dateList);
-
+                Log.d("CreateEventDetailFragment", "createNewMeet: " + dateList);
+                updateChipGroup();
 
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -201,6 +188,25 @@ public class CreateEventDetailFragment extends Fragment {
 
         }, hour, minute, true).show();
     }
+
+    private void updateChipGroup() {
+        flexboxLayout.removeAllViews();
+        for (int i = 0; i < dateList.size(); i++) {
+            Date date = dateList.get(i);
+            Chip chip = new Chip(requireContext());
+            chip.setText(SDF.format(date));
+            chip.setCloseIconVisible(true);
+            int finalI = i;
+            chip.setOnCloseIconClickListener(v -> {
+                dateList.remove(finalI);
+                Log.d("CreateEventDetailFragment", "updateChipGroup: " + dateList);
+                updateChipGroup();
+            });
+            flexboxLayout.addView(chip);
+        }
+    }
+
+
 
     private void setCurrentDateTv() {
         Calendar now = Calendar.getInstance();
@@ -254,5 +260,7 @@ public class CreateEventDetailFragment extends Fragment {
         binding.btnPickDay.setBackgroundColor(getResources().getColor(color.blank_background));
         binding.btnPickTime.setBackgroundColor(getResources().getColor(color.blank_background));
     }
+
+
 
 }

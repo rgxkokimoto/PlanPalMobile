@@ -79,6 +79,10 @@ dependencies {
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
     implementation("com.google.firebase:firebase-storage:20.3.0")
 
+    // para las etiquetas de las horas
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
+
+
 
     // build.gradle (nivel app)
    /* implementation ("com.google.firebase:firebase-messaging:23.4.0")
