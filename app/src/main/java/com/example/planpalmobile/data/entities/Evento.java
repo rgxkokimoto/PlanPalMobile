@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class Evento {
 
+    private String id;
     private String codigo;
     private String descripcion;
     private Date horaInicio;
@@ -18,13 +19,6 @@ public class Evento {
     private String etiqueta;
 
     public Evento() {}
-
-    // Para el item de la lista del Calendario
-    public Evento(String codigo, String descripcion, Date horaInicio) {
-        this.codigo = codigo;
-        this.descripcion = descripcion;
-        this.horaInicio = horaInicio;
-    }
 
     public Evento(String codigo, String descripcion, Date horaInicio, Date horaFin, List<Date> horasDisponibles, Map<Date, String> citasReservadas, String creadorId
         , String etiqueta
@@ -37,6 +31,24 @@ public class Evento {
         this.citasReservadas = citasReservadas;
         this.creadorId = creadorId;
         this.etiqueta = etiqueta;
+    }
+
+    public Evento(String id, String codigo, String descripcion, Date horaInicio, Date horaFin, List<Date> horasDisponibles, Map<Date, String> citasReservadas, String creadorId
+                  , String etiqueta)
+    {
+        this.id = id;
+        this.codigo = codigo;
+        this.descripcion = descripcion;
+        this.horaInicio = horaInicio;
+        this.horaFin = horaFin;
+        this.horasDisponibles = horasDisponibles;
+        this.citasReservadas = citasReservadas;
+        this.creadorId = creadorId;
+        this.etiqueta = etiqueta;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getCodigo() {

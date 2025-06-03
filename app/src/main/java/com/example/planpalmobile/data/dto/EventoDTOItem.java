@@ -3,8 +3,8 @@ package com.example.planpalmobile.data.dto;
 import java.util.Date;
 
 /**
- *  Las clases dto sirven para traspasar datos entre la aplicación de forma más flexible
- *  permitiendo indexar los datos requeridos
+ *  Las clases dto sirven para traspasar datos especificos entre la aplicación de forma
+ *  más flexible y eficiente.
  */
 public class EventoDTOItem {
     public String id;

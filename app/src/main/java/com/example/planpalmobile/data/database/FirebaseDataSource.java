@@ -129,6 +129,7 @@ public class FirebaseDataSource {
                     for (QueryDocumentSnapshot doc : snapshot) {
                         Map<String, Object> data = new HashMap<>();
                         data.put("id", doc.getId());
+                        Log.d("getEventsByUser", "id: " + doc.getId());
                         data.put("codigo", doc.getString("codigo"));
                         data.put("horaInicio", doc.getTimestamp("horaInicio"));
                         data.put("creadorId", doc.getString("creadorId"));

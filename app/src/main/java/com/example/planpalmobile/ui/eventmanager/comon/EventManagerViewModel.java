@@ -44,6 +44,10 @@ public class EventManagerViewModel extends ViewModel {
         NEW_EVENT
     }
 
+    public enum EventEditStatus {
+        OK
+    }
+
     private final MutableLiveData<String> title = new MutableLiveData<>();
     private final MutableLiveData<Date> startDate = new MutableLiveData<>();
     private final MutableLiveData<Date> endDate = new MutableLiveData<>();
@@ -152,7 +156,7 @@ public class EventManagerViewModel extends ViewModel {
         });
     }
 
-    // TODO solucionar prblema del id
+
     public void updateFieldEvent(String codEvnent, Map<String, Object> updField, Consumer<String> onUpdate) {
         repository.actualizarEvento(codEvnent, updField, success -> {
             if (success) {
@@ -172,6 +176,7 @@ public class EventManagerViewModel extends ViewModel {
     }
 
     // METODOS PARA LA VISTA
+
     public void putNewDesc(Context usedFragment, Consumer<String> onDescSaved) {
         EditText input = new EditText(usedFragment);
         input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);

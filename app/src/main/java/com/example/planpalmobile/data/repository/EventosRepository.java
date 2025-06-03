@@ -157,6 +157,7 @@ public class EventosRepository {
 
             for (Map<String, Object> map : listaMapas) {
                 try {
+                    String id = (String) map.get("id");
                     String codigo = (String) map.get("codigo");
                     String descripcion = (String) map.get("descripcion");
                     String etiqueta = (String) map.get("etiqueta");
@@ -196,6 +197,7 @@ public class EventosRepository {
                     String creadorId = (String) map.get("creadorId");
 
                     Evento evento = new Evento(
+                            id,
                             codigo,
                             descripcion,
                             horaInicio,

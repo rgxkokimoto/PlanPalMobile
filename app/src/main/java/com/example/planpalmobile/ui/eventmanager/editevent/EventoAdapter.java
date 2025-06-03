@@ -86,6 +86,7 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoView
         // Obtener ID del evento en Firestore antes de navegar
         holder.btnVerDetalles.setOnClickListener(v -> {
                 Bundle bundle = new Bundle();
+                bundle.putString("id", evento.getId());
                 bundle.putString("codigo", evento.getCodigo());
                 bundle.putString("descripcion", evento.getDescripcion());
                 if (evento.getHoraInicio() != null) {
