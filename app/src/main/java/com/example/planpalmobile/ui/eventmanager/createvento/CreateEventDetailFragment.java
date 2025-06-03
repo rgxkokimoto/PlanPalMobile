@@ -85,8 +85,9 @@ public class CreateEventDetailFragment extends Fragment {
         binding.btnNewDate.setOnClickListener(v -> { createNewMeet(); });
 
         binding.btnCategoria.setOnClickListener(v -> {
-            eMvm.putNewCategory(requireContext(), binding);
-
+            eMvm.putNewCategory(requireContext(), etiqueta -> {
+                binding.btnCategoria.setText(etiqueta);
+            });
         });
 
         binding.btnCancelar.setOnClickListener(v -> {

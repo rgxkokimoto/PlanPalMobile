@@ -35,7 +35,6 @@ public class EventoDetalleActivity extends Fragment {
     private EventManagerViewModel eMvm;
     private String eventoId;
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater name, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -46,6 +45,22 @@ public class EventoDetalleActivity extends Fragment {
         setData();
 
         binding.btnVolver.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
+
+        binding.btnCategoria.setOnClickListener(v -> {
+            eMvm.putNewCategory(requireContext(), etiqueta -> {
+                Map<String, Object> data = new HashMap<>();
+                data.put("etiqueta", etiqueta);
+                saveNewFieldResponse(data, updated -> {
+                    if (updated) {
+                        binding.btnCategoria.setText(etiqueta);
+                        Toast.makeText(requireContext(), "Etiqueta actualizada correctamente", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(requireContext(), "Error al actualizar el campo etiqueta", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        });
+
 
         binding.btnCodigo.setOnClickListener(v -> {
             setNewTitle();
@@ -61,6 +76,7 @@ public class EventoDetalleActivity extends Fragment {
                     saveNewFieldResponse(data, updated -> {
                         if (updated) {
                             binding.tvDescription.setText(newDesc);
+                            Toast.makeText(requireContext(), "Descripción actualizada correctamente", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(requireContext(), "Error al actualizar el campo descripcion", Toast.LENGTH_SHORT).show();
                         }

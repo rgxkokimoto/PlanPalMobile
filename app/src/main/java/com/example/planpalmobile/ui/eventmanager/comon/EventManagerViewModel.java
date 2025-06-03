@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModel;
 import com.example.planpalmobile.R;
 import com.example.planpalmobile.data.entities.Evento;
 import com.example.planpalmobile.data.repository.EventosRepository;
-import com.example.planpalmobile.databinding.FragmentCreateEventDetailBinding;
 import com.google.android.material.button.MaterialButton;
 
 import java.text.ParseException;
@@ -232,7 +231,7 @@ public class EventManagerViewModel extends ViewModel {
     }
 
 
-    public void putNewCategory(Context context, FragmentCreateEventDetailBinding binding) {
+    public void putNewCategory(Context context, Consumer<String> etiqueta) {
         String[] etiquetasOpciones = {"profesional", "ocio", "personal", "académico"};
 
         final int[] selectedIndex = {-1};
@@ -246,9 +245,7 @@ public class EventManagerViewModel extends ViewModel {
                     if (selectedIndex[0] != -1) {
                         String etiquetaSeleccionada = etiquetasOpciones[selectedIndex[0]];
                         etiquetas.setValue(etiquetaSeleccionada);
-
-                        binding.btnCategoria.setText(etiquetas.getValue());
-
+                        etiqueta.accept(etiquetaSeleccionada);
                     }
                 })
                 .setNegativeButton("Cancelar", null)
