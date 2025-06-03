@@ -63,22 +63,22 @@ public class CreateEventDetailFragment extends Fragment {
         });
 
         binding.btnPickDay.setOnClickListener(v -> {
-            eMvm.showDatePicker(requireContext(), binding.btnPickDay, binding.btnPickDayEn);
+            eMvm.showDatePicker(requireContext(), binding.btnPickDay, binding.btnPickDayEn, null);
             blanckButtons(color.blank_background);
         });
 
         binding.btnPickTime.setOnClickListener(v -> {
-            eMvm.showTimePicker(requireContext(), binding.btnPickTime);
+            eMvm.showTimePicker(requireContext(), binding.btnPickTime , null);
             blanckButtons(color.blank_background);
         });
 
         binding.btnPickDayEn.setOnClickListener(v -> {
-            eMvm.showDatePicker(requireContext(), binding.btnPickDayEn, null);
+            eMvm.showDatePicker(requireContext(), binding.btnPickDayEn, null, null);
             blanckButtons(color.blank_background);
         });
 
         binding.btnPickTimeEnd.setOnClickListener(v -> {
-            eMvm.showTimePicker(requireContext(), binding.btnPickTimeEnd);
+            eMvm.showTimePicker(requireContext(), binding.btnPickTimeEnd , null);
             blanckButtons(color.blank_background);
         });
 
@@ -112,7 +112,6 @@ public class CreateEventDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         eMvm.getEventCreationStatus().observe(getViewLifecycleOwner(), message -> {
             Log.d("CreateEventDetailFragment", "onViewCreated: " + message);
             switch (message) {
@@ -140,7 +139,6 @@ public class CreateEventDetailFragment extends Fragment {
             }
 
             binding.btnCrear.setOnClickListener(this::createdNewEvent);
-
 
         });
 

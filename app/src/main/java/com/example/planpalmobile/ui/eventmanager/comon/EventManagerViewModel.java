@@ -8,6 +8,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
@@ -167,6 +168,43 @@ public class EventManagerViewModel extends ViewModel {
         });
     }
 
+    MutableLiveData<MaterialButton> initDay = new MutableLiveData<>();
+    MutableLiveData<MaterialButton> initTime = new MutableLiveData<>();
+    MutableLiveData<MaterialButton> endDay = new MutableLiveData<>();
+    MutableLiveData<MaterialButton> endTime = new MutableLiveData<>();
+    public void setInitDay(MaterialButton initDay) { this.initDay.setValue(initDay); }
+    public void setInitTime(MaterialButton initTime) { this.initTime.setValue(initTime); }
+    public void setEndDay(MaterialButton endDay) { this.endDay.setValue(endDay); }
+    public void setEndTime(MaterialButton endTime) { this.endTime.setValue(endTime); }
+
+    public void validateNewDateUpdated(MaterialButton btnUpdatedA,@Nullable MaterialButton btnUpdatedB ,Consumer<String> status) {
+        Date oldDateIn = startDate.getValue();
+        Date oldDateEn = endDate.getValue();
+
+        if (oldDateIn == null && oldDateEn == null) {
+            status.accept("No hay fechas antiguas");
+            return;
+        }
+
+        Date newDateIn = parseDateTimeFromButtons(initDay.getValue(), initTime.getValue());
+        Date newDateEn = parseDateTimeFromButtons(endDay.getValue(), endTime.getValue());
+
+        if (newDateIn.after(newDateEn) || newDateIn.equals(newDateEn)) {
+            if (newDateEn.equals(newDateIn)) status.accept("Las fechas no pueden ser iguales");
+            else status.accept("La fecha de inicio es posterior a la fecha de fin");
+
+            btnUpdatedA.setBackgroundColor(btnUpdatedA.getContext().getResources().getColor(R.color.red_error_btn));
+            if (btnUpdatedB != null) btnUpdatedB.setBackgroundColor(btnUpdatedB.getContext().getResources().getColor(R.color.red_error_btn));
+            return;
+        }
+
+        // TODO coger las fechas si son correctas y actualizarlas en la vista y en la base de datos
+        Toast.makeText(btnUpdatedA.getContext(), "Fechas actualizadas correctamente", Toast.LENGTH_SHORT).show();
+
+    }
+
+
+
     public void clearMutableData() {
         title.setValue(null);
         startDate.setValue(null);
@@ -220,7 +258,7 @@ public class EventManagerViewModel extends ViewModel {
 
     // TODO REFACTORIZAR LOS MÉTODOS PARA ESCOGER LAS FECHAS
 
-    public void showDatePicker(Context context ,Button button, @Nullable Button endBtn) {
+    public void showDatePicker(Context context ,Button button, @Nullable Button endBtn, @Nullable Runnable onDateSet) {
         Calendar calendar = Calendar.getInstance();
 
         new DatePickerDialog(context, (view, year, month, dayOfMonth) -> {
@@ -239,17 +277,25 @@ public class EventManagerViewModel extends ViewModel {
                 endBtn.setHint(formatDate);
             }
 
+            if (onDateSet != null) {
+                onDateSet.run();
+            }
+
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
 
     }
 
-    public void showTimePicker(Context context ,Button targetBtn) {
+    public void showTimePicker(Context context ,Button targetBtn , @Nullable Runnable onTimeSet) {
         Calendar now = Calendar.getInstance();
 
         new TimePickerDialog(context, (view, hourOfDay, minute) -> {
             String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minute);
             targetBtn.setText(formattedTime);
             targetBtn.setHint(formattedTime);
+
+            if (onTimeSet != null) {
+                onTimeSet.run();
+            }
 
         }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true).show();
     }

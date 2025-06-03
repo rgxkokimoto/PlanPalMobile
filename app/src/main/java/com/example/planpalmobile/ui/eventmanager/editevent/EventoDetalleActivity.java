@@ -70,41 +70,61 @@ public class EventoDetalleActivity extends Fragment {
                 }
 
             });
-
-
         });
 
         binding.btnPickDay.setOnClickListener(v -> {
-            // Validar si la hora de inicio es posterior a la hora de fin dia + hora
-            eMvm.showDatePicker(requireContext(), binding.btnPickDay, binding.btnPickDayEn);
-            blanckButtons(R.color.blank_background);
+            blanckButtons(R.color.white);
+            eMvm.showDatePicker(requireContext(), binding.btnPickDay, binding.btnPickDayEn, () -> {
+                updateDataButtons();
+                eMvm.validateNewDateUpdated(binding.btnPickDay, binding.btnPickDayEn, resp -> {
+                    Toast.makeText(requireContext(), resp, Toast.LENGTH_SHORT).show();
+                }) ;
+            });
         });
 
         binding.btnPickTime.setOnClickListener(v -> {
-            // Validar si la hora de inicio es posterior a la hora de fin dia + hora
-            eMvm.showTimePicker(requireContext(), binding.btnPickTime);
-            blanckButtons(R.color.blank_background);
+            blanckButtons(R.color.white);
+            eMvm.showTimePicker(requireContext(), binding.btnPickTime, () -> {
+                updateDataButtons();
+                eMvm.validateNewDateUpdated(binding.btnPickTime, null , resp -> {
+                    Toast.makeText(requireContext(), resp, Toast.LENGTH_SHORT).show();
+                });
+            });
         });
 
         binding.btnPickDayEn.setOnClickListener(v -> {
-            // Validar si la hora de inicio no es posterior a la hora de fin dia + hora
-            eMvm.showDatePicker(requireContext(), binding.btnPickDayEn, null);
-            blanckButtons(R.color.blank_background);
+            blanckButtons(R.color.white);
+            eMvm.showDatePicker(requireContext(), binding.btnPickDayEn, null, () -> {
+                eMvm.validateNewDateUpdated(binding.btnPickDayEn, binding.btnPickTimeEnd , resp -> {
+                    updateDataButtons();
+                    Toast.makeText(requireContext(), resp, Toast.LENGTH_SHORT).show();
+                });
+            });
         });
 
         binding.btnPickTimeEnd.setOnClickListener(v -> {
-            // Validar si la hora de inicio no es posterior a la hora de fin dia + hora
-            eMvm.showTimePicker(requireContext(), binding.btnPickTimeEnd);
-            blanckButtons(R.color.blank_background);
+            blanckButtons(R.color.white);
+            eMvm.showTimePicker(requireContext(), binding.btnPickTimeEnd , () -> {
+                updateDataButtons();
+                eMvm.validateNewDateUpdated(binding.btnPickTimeEnd, binding.btnPickDayEn, resp -> {
+                    Toast.makeText(requireContext(), resp, Toast.LENGTH_SHORT).show();
+                });
+            });
         });
 
-        // TODO Alterar horas disponibles
+        // TODO Alterar lista de horas disponibles
 
         binding.tvToggleDesc.setOnClickListener(v -> toggleDescripcion());
 
         return root;
     }
 
+    private void updateDataButtons() {
+        eMvm.setInitDay(binding.btnPickDay);
+        eMvm.setInitTime(binding.btnPickTime);
+        eMvm.setEndDay(binding.btnPickDayEn);
+        eMvm.setEndTime(binding.btnPickTimeEnd);
+    }
 
     private void setNewTitle() {
         EditText input = new EditText(requireContext());
@@ -169,6 +189,7 @@ public class EventoDetalleActivity extends Fragment {
             binding.btnPickTime.setText(sdfHora.format(inicio));
             binding.btnPickDayEn.setText(sdfFecha.format(fin));
             binding.btnPickTimeEnd.setText(sdfHora.format(fin));
+            updateDataButtons();
             binding.tvDescription.setText((descripcion != null ? descripcion : "Sin descripción"));
             // TODO Lógica para cargar horas disponibles
         }
@@ -189,6 +210,8 @@ public class EventoDetalleActivity extends Fragment {
     private void blanckButtons(int blank_background) {
         binding.btnPickDay.setBackgroundColor(getResources().getColor(blank_background));
         binding.btnPickTime.setBackgroundColor(getResources().getColor(blank_background));
+        binding.btnPickDayEn.setBackgroundColor(getResources().getColor(blank_background));
+        binding.btnPickTimeEnd.setBackgroundColor(getResources().getColor(blank_background));
     }
 
     @Override
