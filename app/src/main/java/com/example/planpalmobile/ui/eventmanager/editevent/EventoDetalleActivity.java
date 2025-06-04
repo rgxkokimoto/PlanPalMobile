@@ -1,6 +1,7 @@
 package com.example.planpalmobile.ui.eventmanager.editevent;
 
 import android.app.AlertDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -18,13 +19,19 @@ import androidx.navigation.Navigation;
 import com.example.planpalmobile.R;
 import com.example.planpalmobile.databinding.ActivityEventoDetalleBinding;
 import com.example.planpalmobile.ui.eventmanager.comon.EventManagerViewModel;
-import com.google.android.material.button.MaterialButton;
+import com.google.android.flexbox.FlexboxLayout;
+import com.google.android.material.chip.Chip;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.function.Consumer;
 
 public class EventoDetalleActivity extends Fragment {
@@ -34,6 +41,10 @@ public class EventoDetalleActivity extends Fragment {
     private final SimpleDateFormat sdfHora = new SimpleDateFormat("HH:mm", Locale.getDefault());
     private EventManagerViewModel eMvm;
     private String eventoId;
+    private final List<Date> dateList = new ArrayList<>();
+    private FlexboxLayout flexboxLayout;
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater name, ViewGroup container,
@@ -41,7 +52,7 @@ public class EventoDetalleActivity extends Fragment {
         binding = ActivityEventoDetalleBinding.inflate(getLayoutInflater());
         View root = binding.getRoot();
         eMvm = new ViewModelProvider(requireActivity()).get(EventManagerViewModel.class);
-
+        flexboxLayout = binding.flexboxChips;
         setData();
 
         binding.btnVolver.setOnClickListener(v -> Navigation.findNavController(v).popBackStack());
@@ -128,7 +139,7 @@ public class EventoDetalleActivity extends Fragment {
             });
         });
 
-        // TODO Alterar lista de horas disponibles
+        binding.btnNewDate.setOnClickListener(v -> createNewMeet());
 
         binding.tvToggleDesc.setOnClickListener(v -> toggleDescripcion());
 
@@ -191,13 +202,22 @@ public class EventoDetalleActivity extends Fragment {
             Date fin = new Date(finMillis);
             String etiqueta = args.getString("etiqueta");
             eventoId = args.getString("id");
-            Log.d("id", eventoId);
+            long[] horasDisponiblesArray = getArguments().getLongArray("horasDisponibles");
+            Log.d("FHD", "horasDisponiblesArray: " + horasDisponiblesArray.length);
+            if (horasDisponiblesArray != null) {
+                for (long millis : horasDisponiblesArray) {
+                    dateList.add(new Date(millis));
+                }
+            }
 
+            eMvm.setEventoId(eventoId);
             eMvm.setEtiquetas(etiqueta);
             eMvm.setTitle(codigo);
             eMvm.setStartDate(inicio);
             eMvm.setEndDate(fin);
             eMvm.setDescription(descripcion);
+            eMvm.setHorasDisponibles(dateList);
+
 
             binding.btnCategoria.setText(etiqueta);
             binding.btnCodigo.setText((codigo != null ? codigo : "Sin título"));
@@ -207,9 +227,114 @@ public class EventoDetalleActivity extends Fragment {
             binding.btnPickTimeEnd.setText(sdfHora.format(fin));
             updateDataButtons();
             binding.tvDescription.setText((descripcion != null ? descripcion : "Sin descripción"));
-            // TODO Lógica para cargar horas disponibles
+            updateChipGroup();
         }
     }
+
+    private void createNewMeet() {
+
+        Calendar now = Calendar.getInstance();
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        int minute = now.get(Calendar.MINUTE);
+
+        new TimePickerDialog(requireContext(), (view, hourOfDay, minute1) -> {
+            try {
+
+                String dateStr = binding.btnPickDay.getText().toString();
+
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                Date date = sdf.parse(dateStr);
+
+                Calendar calendar = Calendar.getInstance();
+                if (date != null) {
+                    calendar.setTime(date);
+                }
+
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute1);
+
+                Date newDate = calendar.getTime();
+                Log.d("CreateEventDetailFragment", "NewDateMeet: " + newDate);
+
+                Date evetInitDate = eMvm.parseDateTimeFromButtons(binding.btnPickDay, binding.btnPickTime);
+                Date eventEndEnd = eMvm.parseDateTimeFromButtons(binding.btnPickDayEn, binding.btnPickTimeEnd);
+                Log.d("CreateEventDetailFragment", "DateInMeet: " + evetInitDate);
+                Log.d("CreateEventDetailFragment", "DateEndMeet: " + eventEndEnd);
+
+                boolean isNewMeetValid = eMvm.validateNewMeet(newDate, dateList, evetInitDate, eventEndEnd);
+
+                if (!isNewMeetValid) {
+                    Toast.makeText(requireContext(), "Fecha invalida, fuera del evento oh repetida", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                dateList.add(newDate);
+                Log.d("CreateEventDetailFragment", "createNewMeet: " + dateList);
+                updateChipGroup();
+                updateFirestoreHorasDisponibles();
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Toast.makeText(requireContext(), "Formato de meet incorrecto", Toast.LENGTH_SHORT).show();
+            }
+
+        }, hour, minute, true).show();
+    }
+
+    private void updateChipGroup() {
+        if (flexboxLayout.getChildCount() > 0) {
+            flexboxLayout.removeAllViews();
+        }
+        for (int i = 0; i < dateList.size(); i++) {
+            Date date = dateList.get(i);
+            Chip chip = new Chip(requireContext());
+            chip.setText(SDF.format(date));
+            chip.setCloseIconVisible(true);
+            int finalI = i;
+            chip.setOnCloseIconClickListener(v -> {
+                dateList.remove(finalI);
+                Log.d("CreateEventDetailFragment", "updateChipGroup: " + dateList);
+                updateChipGroup();
+
+                SimpleDateFormat sformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+                sformat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                List<String> horasDisponiblesStr = new ArrayList<>();
+                for (Date dateUp : dateList) {
+                    horasDisponiblesStr.add(sformat.format(dateUp));
+                }
+                Map<String, Object> data = new HashMap<>();
+                data.put("horasDisponibles", horasDisponiblesStr);
+
+                eMvm.updateFieldEvent(eventoId, data, resp -> {
+                    if (!"OK".equals(resp)) {
+                        Toast.makeText(requireContext(), "Error al actualizar Firestore", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+
+            flexboxLayout.addView(chip);
+        }
+    }
+
+    private void updateFirestoreHorasDisponibles() {
+        SimpleDateFormat sformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        sformat.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        List<String> horasDisponiblesStr = new ArrayList<>();
+        for (Date dateUp : dateList) {
+            horasDisponiblesStr.add(sformat.format(dateUp));
+        }
+        Map<String, Object> data = new HashMap<>();
+        data.put("horasDisponibles", horasDisponiblesStr);
+
+        eMvm.updateFieldEvent(eventoId, data, resp -> {
+            if (!"OK".equals(resp)) {
+                Toast.makeText(requireContext(), "Error al actualizar Firestore", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
 
     private void toggleDescripcion() {

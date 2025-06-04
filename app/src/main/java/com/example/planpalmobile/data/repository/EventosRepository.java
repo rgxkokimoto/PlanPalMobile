@@ -167,13 +167,26 @@ public class EventosRepository {
                     Date horaInicio = tsInicio != null ? tsInicio.toDate() : null;
                     Date horaFin = tsFin != null ? tsFin.toDate() : null;
 
-                    List<Timestamp> listaTimestamps = (List<Timestamp>) map.get("fechasDisponibles");
+                    List<String> listaStrings = (List<String>) map.get("horasDisponibles");
+                    //Log.d("FHD", "listaStrings : " + listaStrings);
                     List<Date> fechasDisponibles = new ArrayList<>();
-                    if (listaTimestamps != null) {
-                        for (Timestamp ts : listaTimestamps) {
-                            fechasDisponibles.add(ts.toDate());
+
+                    if (listaStrings != null) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+                        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                        for (String fechaStr : listaStrings) {
+                            try {
+                                Date fecha = sdf.parse(fechaStr);
+                                if (fecha != null) {
+                                    fechasDisponibles.add(fecha);
+                                }
+                            } catch (ParseException e) {
+                                Log.e("ParseHoras", "Error al parsear hora disponible: " + fechaStr);
+                            }
                         }
                     }
+
 
                     Map<String, String> citasFirestore = (Map<String, String>) map.get("citasReservadas");
                     Map<Date, String> citasReservadas = new HashMap<>();

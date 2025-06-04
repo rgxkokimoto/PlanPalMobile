@@ -17,16 +17,11 @@ import com.example.planpalmobile.R;
 import com.example.planpalmobile.data.database.FirebaseDataSource;
 import com.example.planpalmobile.data.entities.Evento;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.function.Consumer;
 
 public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoViewHolder> {
 
@@ -97,8 +92,18 @@ public class EventoAdapter extends RecyclerView.Adapter<EventoAdapter.EventoView
                 }
                 bundle.putString("etiqueta", evento.getEtiqueta());
 
+                List<Date> fechas = evento.getHorasDisponibles();
+                Log.d("FHD", "fechas en adapter: " + fechas);
+                if (fechas != null) {
+                    long[] horasDisponiblesArray = new long[fechas.size()];
+                    for (int i = 0; i < fechas.size(); i++) {
+                        horasDisponiblesArray[i] = fechas.get(i).getTime();
+                    }
+                    bundle.putLongArray("horasDisponibles", horasDisponiblesArray);
+                }
 
-                Navigation.findNavController(v).navigate(
+
+            Navigation.findNavController(v).navigate(
                         R.id.action_navigation_event_manager_to_eventoDetalleActivity, bundle);
             });
 

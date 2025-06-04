@@ -25,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -33,6 +34,8 @@ import java.util.function.Consumer;
 public class EventManagerViewModel extends ViewModel {
 
     private final EventosRepository repository = new EventosRepository();
+
+
 
     public enum EventCreationStatus {
         ERROR_TITLE,
@@ -44,16 +47,14 @@ public class EventManagerViewModel extends ViewModel {
         NEW_EVENT
     }
 
-    public enum EventEditStatus {
-        OK
-    }
-
+    MutableLiveData<String> eventoId = new MutableLiveData<>();
     private final MutableLiveData<String> title = new MutableLiveData<>();
     private final MutableLiveData<Date> startDate = new MutableLiveData<>();
     private final MutableLiveData<Date> endDate = new MutableLiveData<>();
     private final MutableLiveData<String> description = new MutableLiveData<>();
     private final MutableLiveData<List<Date>> availableDates = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<String> etiquetas = new MutableLiveData<>("personal");
+    private final MutableLiveData<List<Date>> horasDisponibles = new MutableLiveData<>(new ArrayList<>());
 
     private final MutableLiveData<EventCreationStatus> respNewEvent = new MutableLiveData<>();
     public LiveData<EventCreationStatus> getEventCreationStatus() { return respNewEvent; }
@@ -64,7 +65,10 @@ public class EventManagerViewModel extends ViewModel {
     public void setDescription(String d) { description.setValue(d); }
     public void setAvailableDates(List<Date> d) { availableDates.setValue(d); }
     public void setEtiquetas(String e) { etiquetas.setValue(e); }
+    public void setHorasDisponibles(List<Date> horasDisponibles) {}
     public void setNewEventState() { respNewEvent.setValue(EventCreationStatus.NEW_EVENT); }
+    public void setEventoId(String id) { eventoId.setValue(id); }
+
 
     public void removeAvailableDate(Date d) {
         List<Date> list = availableDates.getValue();
@@ -200,6 +204,25 @@ public class EventManagerViewModel extends ViewModel {
         // TODO coger las fechas si son correctas y actualizarlas en la vista y en la base de datos
         Toast.makeText(btnUpdatedA.getContext(), "Fechas actualizadas correctamente", Toast.LENGTH_SHORT).show();
 
+        Map<String, Object> data = new HashMap<>();
+        data.put("horaInicio", newDateIn);
+        updateFieldEvent(eventoId.getValue(), data, resp -> {
+            if ("OK".equals(resp)) {
+                status.accept("OK");
+            } else {
+                status.accept("ERROR");
+            }
+        });
+
+        Map<String, Object> data2 = new HashMap<>();
+        data2.put("horaFin", newDateEn);
+        updateFieldEvent(eventoId.getValue(), data2, resp -> {
+            if ("OK".equals(resp)) {
+                status.accept("OK");
+            } else {
+                status.accept("ERROR");
+            }
+        });
     }
 
 

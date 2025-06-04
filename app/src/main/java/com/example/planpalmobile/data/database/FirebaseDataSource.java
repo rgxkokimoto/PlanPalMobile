@@ -135,7 +135,7 @@ public class FirebaseDataSource {
                         data.put("creadorId", doc.getString("creadorId"));
                         data.put("descripcion", doc.getString("descripcion"));
                         data.put("horaFin", doc.getTimestamp("horaFin"));
-                        data.put("fechasDisponibles", doc.get("fechasDisponibles"));
+                        data.put("horasDisponibles", doc.get("horasDisponibles"));
                         data.put("citasReservadas", doc.get("citasReservadas"));
                         data.put("etiqueta", doc.getString("etiqueta"));
                         resultado.add(data);
