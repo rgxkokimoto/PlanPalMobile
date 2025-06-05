@@ -97,6 +97,8 @@ public class CreateEventDetailFragment extends Fragment {
 
         });
 
+        binding.btnCrear.setOnClickListener(this::createdNewEvent);
+
         binding.goBackCreate.setOnClickListener(v -> {
             Navigation.findNavController(v).popBackStack();
         });
@@ -139,12 +141,9 @@ public class CreateEventDetailFragment extends Fragment {
                     break;
             }
 
-            binding.btnCrear.setOnClickListener(this::createdNewEvent);
-
         });
 
 
-        binding.btnCrear.setOnClickListener(this::createdNewEvent);
 
     }
 
@@ -154,14 +153,26 @@ public class CreateEventDetailFragment extends Fragment {
         Date dateIn = eMvm.parseDateTimeFromButtons(binding.btnPickDay, binding.btnPickTime);
         Date dateEnd = eMvm.parseDateTimeFromButtons(binding.btnPickDayEn, binding.btnPickTimeEnd);
 
+        dateIn = fixDateToLocalAsUtc(dateIn);
+        dateEnd = fixDateToLocalAsUtc(dateEnd);
+
         eMvm.setTitle(title);
         eMvm.setStartDate(dateIn);
         eMvm.setEndDate(dateEnd);
-        // eMvm.addAvailableDate(dateIn); esto ya se guarda en el método putNewDesc en el ViewModel
         eMvm.setAvailableDates(dateList);
 
-        eMvm.validateNewEvent(); // Esto activa getEventCreationStatus() en el ViewModel
+        eMvm.validateNewEvent();
     }
+
+    public Date fixDateToLocalAsUtc(Date date) {
+        if (date == null) return null;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int offset = cal.getTimeZone().getOffset(cal.getTimeInMillis());
+        cal.setTimeInMillis(cal.getTimeInMillis() - offset);
+        return cal.getTime();
+    }
+
 
 
     private void createNewMeet() {

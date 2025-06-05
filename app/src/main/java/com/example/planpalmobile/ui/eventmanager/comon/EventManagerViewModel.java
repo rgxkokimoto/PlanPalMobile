@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.function.Consumer;
 
 public class EventManagerViewModel extends ViewModel {
@@ -138,6 +139,8 @@ public class EventManagerViewModel extends ViewModel {
 
         String combined = dateStr + " " + timeStr;
         SimpleDateFormat inputFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+
+        inputFormat.setTimeZone(TimeZone.getTimeZone("Europe/Madrid"));
         inputFormat.setLenient(false);
 
         try {
@@ -148,6 +151,7 @@ public class EventManagerViewModel extends ViewModel {
             return null;
         }
     }
+
 
 
     public void eliminarEventoDeFirestore(String codigoEvento) {
