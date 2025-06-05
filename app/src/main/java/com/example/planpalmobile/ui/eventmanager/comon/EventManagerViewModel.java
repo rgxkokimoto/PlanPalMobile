@@ -255,7 +255,7 @@ public class EventManagerViewModel extends ViewModel {
 
 
     public void putNewCategory(Context context, Consumer<String> etiqueta) {
-        String[] etiquetasOpciones = {"profesional", "ocio", "personal", "académico"};
+        String[] etiquetasOpciones = {"profesional", "ocio", "personal", "academico"};
 
         final int[] selectedIndex = {-1};
 

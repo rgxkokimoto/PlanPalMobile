@@ -335,8 +335,6 @@ public class EventoDetalleActivity extends Fragment {
         });
     }
 
-
-
     private void toggleDescripcion() {
         int maxLines = binding.tvDescription.getMaxLines();
         if (maxLines == 3) {

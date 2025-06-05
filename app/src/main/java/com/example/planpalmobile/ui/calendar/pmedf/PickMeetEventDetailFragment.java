@@ -74,10 +74,8 @@ public class PickMeetEventDetailFragment extends Fragment {
             }
 
             PickDateDialogFragment dialog = new PickDateDialogFragment(fechasDisponibles, fechaSeleccionada -> {
-                Toast.makeText(requireContext(), "Cita seleccionada: " + fechaSeleccionada.toString(), Toast.LENGTH_SHORT).show();
-
                 viewModel.reservarCita(id, fechaSeleccionada);
-
+                Toast.makeText(requireContext(), "Cita selecinada.", Toast.LENGTH_SHORT).show();
             });
 
             dialog.show(getParentFragmentManager(), "PickDateDialog");
