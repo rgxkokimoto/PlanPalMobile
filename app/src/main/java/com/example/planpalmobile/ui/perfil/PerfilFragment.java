@@ -32,7 +32,6 @@ public class PerfilFragment extends Fragment {
         binding = FragmentPerfilBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        TextView correoTextView = root.findViewById(R.id.correoTextView);
         TextView descripcionTextView = root.findViewById(R.id.descripcionTextView);
         TextView nombreUsuarioTextView = root.findViewById(R.id.nombreUsuarioTextView);
         ImageView imagenPerfil = root.findViewById(R.id.imagenPerfil);
@@ -54,9 +53,8 @@ public class PerfilFragment extends Fragment {
                             String nombreUsuario = document.getString("name");
                             String urlFoto = document.getString("fotoPerfil");
 
-                            descripcionTextView.setText("Descripción: " + (descripcion != null ? descripcion : ""));
+                            descripcionTextView.setText(descripcion != null ? descripcion : "");
                             nombreUsuarioTextView.setText(nombreUsuario != null ? nombreUsuario : "");
-                            correoTextView.setText(userLoged.getEmail());
 
                             if (urlFoto != null && !urlFoto.isEmpty()) {
                                 Glide.with(this)
@@ -68,13 +66,11 @@ public class PerfilFragment extends Fragment {
                                 imagenPerfil.setImageResource(R.drawable.imgperfil);
                             }
                         } else {
-                            correoTextView.setText("No se encontraron datos.");
                             descripcionTextView.setText("");
                             imagenPerfil.setImageResource(R.drawable.imgperfil);
                         }
                     })
                     .addOnFailureListener(e -> {
-                        correoTextView.setText("Error al cargar datos.");
                         descripcionTextView.setText("");
                         imagenPerfil.setImageResource(R.drawable.imgperfil);
                         Log.e("NotificationsFragment", "Error al obtener datos de Firestore", e);
