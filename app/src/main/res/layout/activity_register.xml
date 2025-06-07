@@ -49,24 +49,7 @@
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_marginTop="25dp"
-        android:id="@+id/textInputLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/introduce_tu_nombre_opcional"
-        app:endIconMode="clear_text"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
-        tools:layout_editor_absoluteX="25dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_login_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword" />
-
-
-    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout2"
@@ -89,13 +72,13 @@
 
     <TextView
         android:id="@+id/tvDescripInfo"
+        android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/campo_de_informaci_n_adicional_opcional"
         android:textSize="16sp"
-        android:layout_marginTop="25dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
 
     <EditText
         android:id="@+id/etDescriptInfo"
