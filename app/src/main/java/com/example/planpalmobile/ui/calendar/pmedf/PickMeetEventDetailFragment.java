@@ -57,6 +57,10 @@ public class PickMeetEventDetailFragment extends Fragment {
 
         viewModel.getEvento().observe(getViewLifecycleOwner(), this::bindEvento);
 
+        binding.gobackCalendar.setOnClickListener(v -> {
+                    getParentFragmentManager().popBackStack();
+                });
+
         binding.btnReservarCita.setOnClickListener(v -> {
 
             Evento evento = viewModel.getEvento().getValue();

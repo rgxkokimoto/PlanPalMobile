@@ -9,6 +9,15 @@
     android:background="@color/sec_blue"
     >
 
+    <ImageButton
+        android:id="@+id/gobackCalendar"
+        android:src="@drawable/icons8_cerrar_ventana_50"
+        android:layout_width="35dp"
+        android:backgroundTint="@color/sec_blue"
+        android:layout_height="35dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tvTitlepPMED"
         android:layout_width="wrap_content"
@@ -30,7 +39,7 @@
         android:backgroundTint="#BABABA"
         android:text="@string/personal"
         android:textSize="13sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

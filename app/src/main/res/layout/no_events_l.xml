@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/ivNoEventsIcon"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="175dp"
+        android:layout_height="175dp"
         android:src="@drawable/no_reservas"
         android:contentDescription="@string/no_events" />
 </FrameLayout>
