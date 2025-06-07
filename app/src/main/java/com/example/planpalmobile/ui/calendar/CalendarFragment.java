@@ -44,19 +44,24 @@ public class CalendarFragment extends Fragment {
         viewStubEmpty = binding.getRoot().findViewById(R.id.viewStubEmpty);
         emptyView = null;
 
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MILLISECOND, 0);
+        String todayS = String.valueOf(today.get(Calendar.DAY_OF_MONTH));
+        binding.tvDiaSelect.setText("Día " + todayS);
+
+
         observeCalendarDays();
         setupDayClickListener();
 
         binding.ibtnActualDay.setOnClickListener(v -> {
-            Calendar today = Calendar.getInstance();
 
-            today.set(Calendar.HOUR_OF_DAY, 0);
-            today.set(Calendar.MINUTE, 0);
-            today.set(Calendar.SECOND, 0);
-            today.set(Calendar.MILLISECOND, 0);
 
             try {
                 binding.calendarView.setDate(today);
+                binding.tvDiaSelect.setText("Día " + todayS);
             } catch (OutOfDateRangeException e) {
                 e.printStackTrace();
             }
