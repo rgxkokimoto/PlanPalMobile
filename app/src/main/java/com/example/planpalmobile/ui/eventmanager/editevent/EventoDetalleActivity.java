@@ -290,6 +290,12 @@ public class EventoDetalleActivity extends Fragment {
             Chip chip = new Chip(requireContext());
             chip.setText(SDF.format(date));
             chip.setCloseIconVisible(true);
+            FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(8, 8, 8, 8);
+            chip.setLayoutParams(params);
             int finalI = i;
             chip.setOnCloseIconClickListener(v -> {
                 dateList.remove(finalI);
