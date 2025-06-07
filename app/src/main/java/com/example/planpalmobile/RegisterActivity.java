@@ -134,7 +134,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void guardarUsuarioEnDatabase(String id ,String name, String opcInfo) {
 
-        if(binding.etLoginName.getText() == null) {
+        if(binding.etUserName.getText() == null) {
             name = name.split("@")[0];  // 'usuario' de usuario@gmail.com
         }
 
