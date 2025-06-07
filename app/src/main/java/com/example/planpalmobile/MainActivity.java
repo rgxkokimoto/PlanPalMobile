@@ -39,10 +39,10 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_calendar, R.id.navigation_event_manager, R.id.navigation_perfil)
                 .build();
 
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) { getSupportActionBar().hide(); }
+        //ActionBar actionBar = getSupportActionBar();
+        //if (actionBar != null) { getSupportActionBar().hide(); }
 
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        //NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
