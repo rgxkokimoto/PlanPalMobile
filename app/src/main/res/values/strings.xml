@@ -72,4 +72,6 @@
     <string name="editar">Editar</string>
     <string name="personal">personal</string>
     <string name="hoy">HOY</string>
+    <string name="t_tulo_del_evento">Título del Evento</string>
+    <string name="ver_detalles">Ver detalles</string>
 </resources>

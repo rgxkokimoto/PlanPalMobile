@@ -63,6 +63,7 @@ public class EventManagerFragment extends Fragment {
         binding.recyclerViewEventos.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerViewEventos.setAdapter(adapter);
 
+
         // Obtener el userId desde SharedPreferences o FirebaseAuth
         String userId = obtenerUserIdActual();
 
@@ -73,11 +74,18 @@ public class EventManagerFragment extends Fragment {
         eventManagerViewModel.getEventosUsuario().observe(getViewLifecycleOwner(), eventos -> {
             Log.d("EventManagerFragment", "Observer eventos llamado con: " + (eventos != null ? eventos.size() : "null"));
             listaEventos.clear();
-            if (eventos != null) {
+
+            if (eventos != null && !eventos.isEmpty()) {
                 listaEventos.addAll(eventos);
+                binding.recyclerViewEventos.setVisibility(View.VISIBLE);
+                binding.viewStubEmpty.setVisibility(View.GONE);
+            } else {
+                binding.recyclerViewEventos.setVisibility(View.GONE);
+                binding.viewStubEmpty.setVisibility(View.VISIBLE);
             }
-            adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged(); // Notify adapter of changes
         });
+
 
 
         // Botón FAB
@@ -85,7 +93,6 @@ public class EventManagerFragment extends Fragment {
             Navigation.findNavController(v).navigate(R.id.action_navigation_event_manager_to_createEventDetailFragment);
         });
     }
-
 
     private String obtenerUserIdActual() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
