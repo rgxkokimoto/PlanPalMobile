@@ -61,6 +61,32 @@ public class EventosRepository {
         });
     }
 
+    /**
+     * Busca eventos por prefijo de codigo
+     * cada prefijo oh similitud que llega desde el usuario lo busca en la base de datos
+     * @param prefix
+     * @param callback
+     */
+    public void searchEventsByCodePrefix(String prefix, Consumer<List<EventoDTOItem>> callback) {
+        dataSource.buscarEventosPorPrefijoCodigo(prefix, listaMapas -> {
+            List<EventoDTOItem> listaDto = new ArrayList<>();
+            if (listaMapas != null) {
+                for (Map<String, Object> map : listaMapas) {
+                    String id = (String) map.get("id");
+                    String codigo = (String) map.get("codigo");
+                    String etiqueta = (String) map.get("etiqueta");
+                    Timestamp timestamp = (Timestamp) map.get("horaInicio");
+                    Date horaInicio = null;
+                    if (timestamp != null) {
+                        horaInicio = timestamp.toDate();
+                    }
+                    listaDto.add(new EventoDTOItem(codigo, horaInicio, id, etiqueta));
+                }
+            }
+            callback.accept(listaDto);
+        });
+    }
+
 
     /**
      * Obtiene un evento por su codigo para la vista de detalles. y el pick meet

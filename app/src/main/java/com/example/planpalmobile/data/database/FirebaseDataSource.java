@@ -51,6 +51,35 @@ public class FirebaseDataSource {
     }
 
 
+    public void buscarEventosPorPrefijoCodigo(String prefijo, Consumer<List<Map<String, Object>>> callback) {
+        if (prefijo == null || prefijo.isEmpty()) {
+            callback.accept(new ArrayList<>());
+            return;
+        }
+
+        db.collection("eventos")
+                .whereGreaterThanOrEqualTo("codigo", prefijo)
+                .whereLessThanOrEqualTo("codigo", prefijo + "\uf8ff")
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    List<Map<String, Object>> resultado = new ArrayList<>();
+                    for (QueryDocumentSnapshot doc : snapshot) {
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("id", doc.getId());
+                        data.put("codigo", doc.getString("codigo"));
+                        data.put("horaInicio", doc.getTimestamp("horaInicio"));
+                        data.put("creadorId", doc.getString("creadorId"));
+                        data.put("etiqueta", doc.getString("etiqueta"));
+                        resultado.add(data);
+                    }
+                    callback.accept(resultado);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FirebaseDataSource", "Error buscando eventos por prefijo: " + e.getMessage(), e);
+                    callback.accept(new ArrayList<>());
+                });
+    }
+
 
 
 

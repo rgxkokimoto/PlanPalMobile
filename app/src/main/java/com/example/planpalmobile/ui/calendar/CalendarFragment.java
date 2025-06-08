@@ -5,6 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.os.Handler;
+import android.os.Looper;
+import androidx.appcompat.widget.SearchView;
+
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -27,6 +31,11 @@ public class CalendarFragment extends Fragment {
     private CalendarViewModel calendarViewModel;
     private View emptyView;
     private ViewStub viewStubEmpty;
+    private androidx.appcompat.widget.SearchView searchViewEvents;
+    private android.os.Handler searchHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private Runnable searchRunnable;
+    private static final long DEBOUNCE_DELAY_MS = 500;
+    private boolean isSearchActive = false;
 
     @Override
     public void onResume() {
@@ -73,8 +82,10 @@ public class CalendarFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         setupRecyclerView();
+        searchViewEvents = binding.searchViewEvents;
+        setupSearchListener();
+        observeSearchResults();
         updateEventsInAdapter();
-        //calendarViewModel.loadEventos(); Deprecado
     }
 
     @Override
@@ -102,23 +113,80 @@ public class CalendarFragment extends Fragment {
         });
     }
 
-    /*
-     *  Este método se encarga de escuchar los clicks del usuario
-     *  en el calendario y actualizar la UI con la fecha seleccionada
-     *  en el dia actual
-     *  ademas esta relacionado con los métodos de filtrado por dia
-     *  que cargan la lista de eventos en el recycler view.
-     */
     private void setupDayClickListener() {
         binding.calendarView.setOnDayClickListener(eventDay -> {
             Calendar fechaSeleccionada = eventDay.getCalendar();
-
             int day = fechaSeleccionada.get(Calendar.DAY_OF_MONTH);
             binding.tvDiaSelect.setText("Día " + day);
+
+            if (searchViewEvents != null) {
+                searchViewEvents.setQuery("", false);
+            }
+            searchHandler.removeCallbacks(searchRunnable);
+            isSearchActive = false;
+
+            calendarViewModel.searchEventosByCodigo("");
 
             calendarViewModel.loadEventosPorFecha(fechaSeleccionada);
         });
     }
+
+    private void setupSearchListener() {
+        searchViewEvents.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchHandler.removeCallbacks(searchRunnable);
+                performSearch(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                searchHandler.removeCallbacks(searchRunnable);
+                searchRunnable = () -> performSearch(newText);
+                searchHandler.postDelayed(searchRunnable, DEBOUNCE_DELAY_MS);
+                return true;
+            }
+        });
+
+        searchViewEvents.setOnCloseListener(() -> {
+            searchHandler.removeCallbacks(searchRunnable);
+            return false;
+        });
+    }
+
+    private void performSearch(String query) {
+        String trimmedQuery = query != null ? query.trim() : "";
+        isSearchActive = !trimmedQuery.isEmpty();
+
+        if (isSearchActive) {
+            calendarViewModel.searchEventosByCodigo(trimmedQuery);
+        } else {
+            calendarViewModel.searchEventosByCodigo("");
+
+            Calendar selectedDate = binding.calendarView.getFirstSelectedDate();
+            if (selectedDate != null) {
+                calendarViewModel.loadEventosPorFecha(selectedDate);
+            } else {
+                Calendar today = Calendar.getInstance();
+                today.set(Calendar.HOUR_OF_DAY, 0);
+                today.set(Calendar.MINUTE, 0);
+                today.set(Calendar.SECOND, 0);
+                today.set(Calendar.MILLISECOND, 0);
+                calendarViewModel.loadEventosPorFecha(today);
+            }
+        }
+    }
+
+    private void observeSearchResults() {
+        calendarViewModel.getSearchedEventosList().observe(getViewLifecycleOwner(), eventos -> {
+            if (isSearchActive) {
+                adapter.updateList(eventos);
+                updateEmptyViewVisibility(eventos != null ? eventos.size() : 0);
+            }
+        });
+    }
+
 
     /*
      *  Este método se encarga de actualizar la lista de eventos
@@ -127,24 +195,28 @@ public class CalendarFragment extends Fragment {
      */
     private void updateEventsInAdapter() {
         calendarViewModel.getEventosList().observe(getViewLifecycleOwner(), eventos -> {
-            adapter.updateList(eventos);
-
-            if (eventos != null && !eventos.isEmpty()) {
-                binding.rvListEventItems.setVisibility(View.VISIBLE);
-
-                if (emptyView != null) {
-                    emptyView.setVisibility(View.GONE);
-                }
-            } else {
-                binding.rvListEventItems.setVisibility(View.GONE);
-
-                if (emptyView == null) {
-                    emptyView = viewStubEmpty.inflate();
-                } else {
-                    emptyView.setVisibility(View.VISIBLE);
-                }
+            if (!isSearchActive) {
+                adapter.updateList(eventos);
+                updateEmptyViewVisibility(eventos != null ? eventos.size() : 0);
             }
         });
+    }
+
+    private void updateEmptyViewVisibility(int itemCount) {
+        if (itemCount > 0) {
+            binding.rvListEventItems.setVisibility(View.VISIBLE);
+            if (emptyView != null) {
+                emptyView.setVisibility(View.GONE);
+            }
+        } else {
+            binding.rvListEventItems.setVisibility(View.GONE);
+            if (emptyView == null && viewStubEmpty != null) {
+                emptyView = viewStubEmpty.inflate();
+                emptyView.setVisibility(View.VISIBLE);
+            } else if (emptyView != null) {
+                emptyView.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     private void setupRecyclerView() {

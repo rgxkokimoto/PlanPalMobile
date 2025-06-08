@@ -17,6 +17,7 @@ import java.util.List;
 public class CalendarViewModel extends ViewModel {
     // Salida a produción sprint2
     private final MutableLiveData<List<EventoDTOItem>> eventosList = new MutableLiveData<>();
+    private final MutableLiveData<List<EventoDTOItem>> searchedEventosList = new MutableLiveData<>();
     private final EventosRepository repository = new EventosRepository();
     private final MutableLiveData<List<Calendar>> datesIcons = new MutableLiveData<>();
 
@@ -50,6 +51,20 @@ public class CalendarViewModel extends ViewModel {
      */
     public void loadEventosPorFecha(Calendar fecha) {
         repository.getEventsItemsByDate(fecha, eventosList::postValue);
+    }
+
+    public LiveData<List<EventoDTOItem>> getSearchedEventosList() {
+        return searchedEventosList;
+    }
+
+    public void searchEventosByCodigo(String searchText) {
+        if (searchText == null || searchText.trim().isEmpty()) {
+            searchedEventosList.postValue(new ArrayList<>());
+            return;
+        }
+        repository.searchEventsByCodePrefix(searchText, eventos -> {
+            searchedEventosList.postValue(eventos);
+        });
     }
 
     public LiveData<List<EventoDTOItem>> getEventosList() {return  eventosList;}
