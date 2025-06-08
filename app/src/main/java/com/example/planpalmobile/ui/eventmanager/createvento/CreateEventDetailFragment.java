@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.planpalmobile.R;
 import com.example.planpalmobile.databinding.FragmentCreateEventDetailBinding;
 import com.example.planpalmobile.ui.eventmanager.comon.EventManagerViewModel;
 
@@ -87,6 +88,7 @@ public class CreateEventDetailFragment extends Fragment {
         binding.btnCategoria.setOnClickListener(v -> {
             eMvm.putNewCategory(requireContext(), etiqueta -> {
                 binding.btnCategoria.setText(etiqueta);
+                setCardColor(etiqueta);
             });
         });
 
@@ -299,6 +301,32 @@ public class CreateEventDetailFragment extends Fragment {
         }, now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true).show();
         binding.btnPickDay.setBackgroundColor(getResources().getColor(color.blank_background));
         binding.btnPickTime.setBackgroundColor(getResources().getColor(color.blank_background));
+    }
+
+    private void setCardColor(String etiquetaSelected) {
+        int color;
+
+        switch (etiquetaSelected) {
+            case "profesional":
+                color = getResources().getColor(R.color.mainBlue);
+                break;
+            case "ocio":
+                color = getResources().getColor(R.color.teal_200);
+                break;
+            case "personal":
+                color = getResources().getColor(R.color.purple_200);
+                break;
+            case "academico":
+                color = getResources().getColor(R.color.bar_color);
+                break;
+
+            default:
+                Log.e("ItemEventRecyclerAdapter", "Etiqueta no reconocida: " + etiquetaSelected);
+                color = getResources().getColor(R.color.gray_list);
+                break;
+        }
+
+        binding.btnCategoria.setBackgroundColor(color);
     }
 
 }

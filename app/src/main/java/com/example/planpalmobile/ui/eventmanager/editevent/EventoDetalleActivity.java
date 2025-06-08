@@ -18,6 +18,7 @@ import androidx.navigation.Navigation;
 
 import com.example.planpalmobile.R;
 import com.example.planpalmobile.databinding.ActivityEventoDetalleBinding;
+import com.example.planpalmobile.ui.calendar.ItemEventRecyclerAdapter;
 import com.example.planpalmobile.ui.eventmanager.comon.EventManagerViewModel;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.chip.Chip;
@@ -69,6 +70,7 @@ public class EventoDetalleActivity extends Fragment {
                         Toast.makeText(requireContext(), "Error al actualizar el campo etiqueta", Toast.LENGTH_SHORT).show();
                     }
                 });
+               setCardColor(etiqueta);
             });
         });
 
@@ -365,5 +367,32 @@ public class EventoDetalleActivity extends Fragment {
         binding = null;
         eMvm.clearMutableData();
     }
+
+    private void setCardColor(String etiquetaSelected) {
+        int color;
+
+        switch (etiquetaSelected) {
+            case "profesional":
+                color = getResources().getColor(R.color.mainBlue);
+                break;
+            case "ocio":
+                color = getResources().getColor(R.color.teal_200);
+                break;
+            case "personal":
+                color = getResources().getColor(R.color.purple_200);
+                break;
+            case "academico":
+                color = getResources().getColor(R.color.bar_color);
+                break;
+
+            default:
+                Log.e("ItemEventRecyclerAdapter", "Etiqueta no reconocida: " + etiquetaSelected);
+                color = getResources().getColor(R.color.gray_list);
+                break;
+        }
+
+        binding.btnCategoria.setBackgroundColor(color);
+    }
+
 
 }

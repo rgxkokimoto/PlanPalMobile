@@ -31,7 +31,6 @@ public class FirebaseDataSource {
      * Retorna los elementos necesarios mostrarlos en el item de la RecyclerView principal
      * del calendario.
      * Estaba deprecado pero ahora se usa para cargar los iconos de los eventos
-     *
      */
     public Task<QuerySnapshot> getEventosItem(Consumer<List<Map<String, Object>>> callback) {
         return db.collection("eventos")
@@ -145,8 +144,6 @@ public class FirebaseDataSource {
                 .addOnFailureListener(e -> {
                     callback.accept(new ArrayList<>());
                 });
-
-
     }
 
 
@@ -188,9 +185,6 @@ public class FirebaseDataSource {
                     callback.accept(false);
                 });
     }
-
-
-
 
 }
 

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.planpalmobile.R;
 import com.example.planpalmobile.data.entities.Evento;
 import com.example.planpalmobile.databinding.FragmentPickMeetEventDetailBinding;
 
@@ -95,6 +96,7 @@ public class PickMeetEventDetailFragment extends Fragment {
 
         binding.tvTitlepPMED.setText(evento.getCodigo());
         binding.btnCategoria.setText(evento.getEtiqueta());
+        setCardColor(evento.getEtiqueta());
         mostrarFechas(evento);
         binding.tvDescription.setText(evento.getDescripcion());
         configurarToggleDescripcion();
@@ -147,6 +149,33 @@ public class PickMeetEventDetailFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void setCardColor(String etiquetaSelected) {
+        int color;
+
+        switch (etiquetaSelected) {
+            case "profesional":
+                color = getResources().getColor(R.color.mainBlue);
+                break;
+            case "ocio":
+                color = getResources().getColor(R.color.teal_200);
+                break;
+            case "personal":
+                color = getResources().getColor(R.color.purple_200);
+                break;
+            case "academico":
+                color = getResources().getColor(R.color.bar_color);
+                break;
+
+            default:
+                Log.e("ItemEventRecyclerAdapter", "Etiqueta no reconocida: " + etiquetaSelected);
+                color = getResources().getColor(R.color.gray_list);
+                break;
+        }
+
+        binding.btnCategoria.setBackgroundColor(color);
+        Log.d("ItemEventRecyclerAdapter", "Etiqueta seleccionada: " + etiquetaSelected);
     }
 
 

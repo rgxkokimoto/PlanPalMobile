@@ -74,25 +74,31 @@ public class ItemEventRecyclerAdapter
 
     // "profesional", "ocio", "personal", "académico", "otro"
     private void setCardColor(ViewHolder holder, String etiquetaSelected) {
+        int color;
 
         switch (etiquetaSelected) {
             case "profesional":
-                holder.binding.cardEtc.setCardBackgroundColor(holder.itemView.getResources().getColor(R.color.mainBlue));
+                color = holder.itemView.getResources().getColor(R.color.mainBlue);
                 break;
             case "ocio":
-                holder.binding.cardEtc.setBackgroundColor(holder.itemView.getResources().getColor(R.color.teal_200));
+                color = holder.itemView.getResources().getColor(R.color.teal_200);
                 break;
             case "personal":
-                holder.binding.cardEtc.setBackgroundColor(holder.itemView.getResources().getColor(R.color.purple_200));
+                color = holder.itemView.getResources().getColor(R.color.purple_200);
                 break;
-            case "académico":
-                holder.binding.cardEtc.setCardBackgroundColor(holder.itemView.getResources().getColor(R.color.bar_color));
+            case "academico":
+                color = holder.itemView.getResources().getColor(R.color.bar_color);
+                break;
 
             default:
                 Log.e("ItemEventRecyclerAdapter", "Etiqueta no reconocida: " + etiquetaSelected);
+                color = holder.itemView.getResources().getColor(R.color.gray_list);
+                break;
         }
 
+        holder.binding.cardEtc.setCardBackgroundColor(color);
     }
+
 
     @Override
     public int getItemCount() {

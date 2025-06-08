@@ -13,16 +13,10 @@
 
         <ImageView
             android:id="@+id/ivNoEventsIcon"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:src="@drawable/no_events_create"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:src="@drawable/no_events_create2"
             android:contentDescription="@string/no_events" />
-
-        <TextView
-            android:id="@+id/tvNoEvents"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No hay eventos creados por \nel usuario." />
 
     </LinearLayout>
 
