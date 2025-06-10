@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.function.Consumer;
 
-public class EventManagerViewModel extends ViewModel {
+public class EventManagerViewModel extends ViewModel{
 
     private final EventosRepository repository = new EventosRepository();
 
@@ -205,7 +205,6 @@ public class EventManagerViewModel extends ViewModel {
             return;
         }
 
-        // TODO coger las fechas si son correctas y actualizarlas en la vista y en la base de datos
         Toast.makeText(btnUpdatedA.getContext(), "Fechas actualizadas correctamente", Toast.LENGTH_SHORT).show();
 
         Map<String, Object> data = new HashMap<>();
@@ -279,8 +278,6 @@ public class EventManagerViewModel extends ViewModel {
                 .show();
 
     }
-
-    // TODO REFACTORIZAR LOS MÉTODOS PARA ESCOGER LAS FECHAS
 
     public void showDatePicker(Context context ,Button button, @Nullable Button endBtn, @Nullable Runnable onDateSet) {
         Calendar calendar = Calendar.getInstance();

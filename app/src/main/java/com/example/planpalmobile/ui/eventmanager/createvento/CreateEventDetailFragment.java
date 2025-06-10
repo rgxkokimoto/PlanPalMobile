@@ -39,7 +39,6 @@ public class CreateEventDetailFragment extends Fragment {
     private FragmentCreateEventDetailBinding binding;
     private final List<Date> dateList = new ArrayList<>();
     private FlexboxLayout flexboxLayout;
-    private final String description = "";
     private EventManagerViewModel eMvm;
     private static final String DATE_FORMAT = "dd/MM/yyyy";
     private static final String TIME_FORMAT = "HH:mm";
@@ -94,7 +93,6 @@ public class CreateEventDetailFragment extends Fragment {
 
         binding.btnCancelar.setOnClickListener(v -> {
 
-            // TODO enseñar un dialog si la lista de fechas no esta vacia
             Navigation.findNavController(v).popBackStack();
 
         });

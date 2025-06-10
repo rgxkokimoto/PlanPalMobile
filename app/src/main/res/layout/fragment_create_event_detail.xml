@@ -71,10 +71,10 @@
         <TextView
             android:id="@+id/tvInicio"
             android:layout_width="0dp"
+            android:layout_marginStart="7dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="30dp"
             android:layout_weight="1"
-            android:padding="9dp"
             android:text="@string/inicio"
             android:textAlignment="textStart"
             android:textSize="14sp"

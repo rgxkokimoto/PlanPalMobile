@@ -112,7 +112,7 @@ public class PickMeetViewModelDetailFragment  extends ViewModel {
         Map<String, Object> datosActualizados = new HashMap<>();
 
         SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-        isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        //isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         List<String> fechasDisponiblesStr = disponiblesActuales.stream()
                 .map(date -> isoFormat.format(date))

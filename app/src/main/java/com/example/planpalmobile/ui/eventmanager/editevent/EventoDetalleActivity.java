@@ -283,6 +283,15 @@ public class EventoDetalleActivity extends Fragment {
         }, hour, minute, true).show();
     }
 
+    public Date fixDateToLocalAsUtc(Date date) {
+        if (date == null) return null;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int offset = cal.getTimeZone().getOffset(cal.getTimeInMillis());
+        cal.setTimeInMillis(cal.getTimeInMillis() - offset);
+        return cal.getTime();
+    }
+
     private void updateChipGroup() {
         if (flexboxLayout.getChildCount() > 0) {
             flexboxLayout.removeAllViews();
@@ -305,7 +314,7 @@ public class EventoDetalleActivity extends Fragment {
                 updateChipGroup();
 
                 SimpleDateFormat sformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-                sformat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                //sformat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
                 List<String> horasDisponiblesStr = new ArrayList<>();
                 for (Date dateUp : dateList) {
@@ -327,7 +336,7 @@ public class EventoDetalleActivity extends Fragment {
 
     private void updateFirestoreHorasDisponibles() {
         SimpleDateFormat sformat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-        sformat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        //sformat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         List<String> horasDisponiblesStr = new ArrayList<>();
         for (Date dateUp : dateList) {

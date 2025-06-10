@@ -199,7 +199,7 @@ public class EventosRepository {
 
                     if (listaStrings != null) {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-                        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        //sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
                         for (String fechaStr : listaStrings) {
                             try {
@@ -219,7 +219,7 @@ public class EventosRepository {
 
                     if (citasFirestore != null) {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
-                        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        //sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 
                         for (Map.Entry<String, String> entry : citasFirestore.entrySet()) {
                             try {
