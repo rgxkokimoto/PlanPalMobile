@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PlanPalMobile</string>
+    <string name="app_name">PlanPal</string>
     <string name="title_calendar">Calendar</string>
     <string name="title_todoLeft">Events</string>
     <string name="title_todoRight">Perfil</string>

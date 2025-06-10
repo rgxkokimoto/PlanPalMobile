@@ -7,13 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity"
     android:padding="25dp"
+    android:background="#fbfbfb"
     >
 
     <ImageView
         android:id="@+id/ivLogoApp"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:src="@drawable/logo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/logo_new_planpal"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
